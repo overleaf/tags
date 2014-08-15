@@ -1,0 +1,7 @@
+**.swp
+**.swo
+app/js/*
+app.js
+test/UnitTests/js/*
+node_modules/*
+test/unit/js/*
