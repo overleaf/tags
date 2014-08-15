@@ -14,14 +14,6 @@ app.configure ()->
 	app.use express.methodOverride()
 	app.use express.bodyParser()
 	app.use metrics.http.monitor(logger)
-
-app.configure 'development', ->
-	console.log "Development Enviroment"
-	app.use express.errorHandler({ dumpExceptions: true, showStack: true })
-
-app.configure 'production', ->
-	console.log "Production Enviroment"
-	app.use express.logger()
 	app.use express.errorHandler()
 
 app.get '/user/:user_id/tag', controller.getUserTags
@@ -38,10 +30,7 @@ app.get '/status', (req, res)->
 app.get '*', (req, res)->
 	res.send 404
 
-
-
-
-host = Settings.host || "localhost"
-port = Settings.port || 3012
+host = Settings.internal?.tags?.host || "localhost"
+port = Settings.internal?.tags?.port || 3012
 app.listen port, host, ->
-	console.log "#{app.name} listening at #{host}:#{port}"
+	console.log "tags-sharelatex listening at #{host}:#{port}"

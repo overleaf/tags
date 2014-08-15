@@ -28,6 +28,7 @@ describe 'creating a user', ->
 
 		@repository = SandboxedModule.require modulePath, requires:
 			'logger-sharelatex': log:->
+			'settings-sharelatex': {}
 			'mongojs':@mongojs
 
 	describe 'getUserTagByName', ->

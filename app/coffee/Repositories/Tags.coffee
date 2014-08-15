@@ -1,6 +1,6 @@
 Settings = require 'settings-sharelatex'
 logger = require('logger-sharelatex')
-db = require('mongojs').connect(Settings.mongo.url, ['tags'])
+db = require('mongojs').connect(Settings.mongo?.url, ['tags'])
 metrics = require('../Metrics')
 
 module.exports =
