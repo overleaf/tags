@@ -2,7 +2,7 @@
   "name": "tags-sharelatex",
   "author": "ShareLaTeX <team@sharelatex.com>",
   "description": "An API for managing project tags/folders in ShareLaTeX",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "repository": {
     "type": "git", 
     "url": "https://github.com/sharelatex/tags-sharelatex.git"
