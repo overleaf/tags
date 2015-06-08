@@ -7,7 +7,7 @@ controller = require("./app/js/TagsController")
 db = require('mongojs').connect(Settings.mongo.url, ['tags'])
 Path = require("path")
 metrics = require("metrics-sharelatex")
-metrics.initialize("tpds")
+metrics.initialize("tags")
 metrics.mongodb.monitor(Path.resolve(__dirname + "/node_modules/mongojs/node_modules/mongodb"), logger)
 
 app.configure ()->
