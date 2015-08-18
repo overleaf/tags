@@ -6,7 +6,6 @@ module.exports =
 	getUserTags: (req, res)->
 		logger.log user_id: req.params.user_id, "getting user tags"
 		TagsRepository.getUserTags req.params.user_id, (err, tags)->
-			console.log err, tags
 			res.json(tags)
 
 	addTag: (req, res)->
