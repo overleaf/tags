@@ -17,14 +17,13 @@ describe 'creating a user', ->
 		@saveStub = sinon.stub()
 		@updateStub = sinon.stub()
 
-		@mongojs = 
-			connect:=>
-				tags:
-					update: self.mongojsUpdate 
-					find: @findStub
-					findOne: @findOneStub
-					save: @saveStub
-					update: @updateStub
+		@mongojs = =>
+			tags:
+				update: self.mongojsUpdate 
+				find: @findStub
+				findOne: @findOneStub
+				save: @saveStub
+				update: @updateStub
 
 		@repository = SandboxedModule.require modulePath, requires:
 			'logger-sharelatex': log:->
