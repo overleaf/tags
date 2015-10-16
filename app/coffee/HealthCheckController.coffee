@@ -11,7 +11,7 @@ logger = require "logger-sharelatex"
 module.exports = 
 	check : (callback)->
 		project_id = ObjectId()
-		user_id = ObjectId(settings.internal.tags.healthCheck.user_id)
+		user_id = ObjectId(settings.tags.healthCheck.user_id)
 		tagName = "smoke-test-tag"
 		getOpts = (endPath)-> {url:"http://localhost:#{port}/user/#{user_id}#{endPath}", timeout:3000}
 		logger.log user_id:user_id, opts:getOpts(), tagName:tagName, project_id:project_id, "running health check"
