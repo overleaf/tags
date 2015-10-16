@@ -12,6 +12,9 @@ metrics.initialize("tags")
 metrics.mongodb.monitor(Path.resolve(__dirname + "/node_modules/mongojs/node_modules/mongodb"), logger)
 metrics.memory.monitor(logger)
 
+HealthCheckController = require("./app/js/HealthCheckController")
+
+
 app.configure ()->
 	app.use express.methodOverride()
 	app.use express.bodyParser()
@@ -28,6 +31,14 @@ app.del '/user/:user_id/project/:project_id', controller.removeProjectFromAllTag
 
 app.get '/status', (req, res)->
 	res.send('tags sharelatex up')
+
+app.get '/health_check', (req, res)->
+	HealthCheckController.check (err)->
+		if err?
+			logger.err err:err, "error performing health check"
+			res.send 500
+		else
+			res.send 200
 
 app.get '*', (req, res)->
 	res.send 404
