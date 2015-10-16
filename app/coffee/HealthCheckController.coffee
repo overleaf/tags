@@ -24,14 +24,10 @@ module.exports =
 				opts = getOpts("/tag")
 				opts.json = true
 				request.get opts, (err, res, body)->
-					console.log body, tagName
-
 					if res.statusCode != 200
 						return cb("status code not 200, its #{res.statusCode}")
 
 					hasTag = _.some body, (tag)-> 
-						console.log tag.name == tagName, tagName
-						console.log _.contains(tag.project_ids, project_id.toString()), tag.project_ids, project_id
 						tag.name == tagName and _.contains(tag.project_ids, project_id.toString())
 					if hasTag
 						cb()
