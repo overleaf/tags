@@ -24,6 +24,14 @@ module.exports =
 		TagsRepository.removeProjectFromAllTags req.params.user_id, req.params.project_id, (err, tags)->
 			res.send()
 	
+	renameTag: (req, res, next) ->
+		{user_id, tag_id} = req.params
+		{name} = req.body
+		logger.log {user_id, tag_id, name}, "renaming tag"
+		TagsRepository.renameTag user_id, tag_id, name, (error) ->
+			return next(error) if error?
+			res.status(204).end()
+	
 	deleteTag: (req, res, next) ->
 		{user_id, tag_id} = req.params
 		logger.log {user_id, tag_id}, "deleting tag"

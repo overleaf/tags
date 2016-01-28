@@ -28,6 +28,8 @@ app.del '/user/:user_id/project/:project_id/tag', controller.removeTag
 
 app.del '/user/:user_id/project/:project_id', controller.removeProjectFromAllTags
 
+app.post '/user/:user_id/tag/:tag_id/rename', controller.renameTag
+
 app.del '/user/:user_id/tag/:tag_id', controller.deleteTag
 
 app.get '/status', (req, res)->

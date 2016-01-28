@@ -48,3 +48,16 @@ module.exports =
 			_id: tag_id,
 			user_id: user_id
 		}, callback
+	
+	renameTag: (user_id, tag_id, name, callback = (error) ->) ->
+		try
+			tag_id = ObjectId(tag_id)
+		catch e
+			return callback(e)
+		db.tags.update {
+			_id: tag_id,
+			user_id: user_id
+		}, {
+			$set:
+				name: name
+		}, callback

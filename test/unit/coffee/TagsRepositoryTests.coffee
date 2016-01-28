@@ -119,9 +119,32 @@ describe 'creating a user', ->
 			it "should call the callback with and error", ->
 				@callback.calledWith(new Error()).should.equal true
 
-
-
-
-
-
+	describe "renameTag", ->
+		describe "with a valid tag_id", ->
+			beforeEach ->
+				@updateStub.callsArg(2)
+				@tag_id = ObjectId().toString()
+				@name = "new-name"
+				@repository.renameTag user_id, @tag_id, @name, @callback
+				
+			it "should call remove in mongo", ->
+				@updateStub
+					.calledWith({
+						_id: ObjectId(@tag_id)
+						user_id: user_id
+					}, {
+						$set: { name: @name }
+					})
+					.should.equal true
+			
+			it "should call the callback", ->
+				@callback.called.should.equal true
+		
+		describe "with an invalid tag_id", ->
+			beforeEach ->
+				@tag_id = "not and object id"
+				@repository.renameTag user_id, @tag_id, "name", @callback
+		
+			it "should call the callback with and error", ->
+				@callback.calledWith(new Error()).should.equal true
 

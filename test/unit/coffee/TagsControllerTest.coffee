@@ -91,3 +91,26 @@ describe 'Tags controller', ->
 		it "should return a 204 status code", ->
 			@res.status.calledWith(204).should.equal true
 			@res.end.called.should.equal true
+
+	describe "renameTag", ->
+		beforeEach ->
+			@tagsRepository.renameTag = sinon.stub().callsArg(3)
+			@res = {}
+			@res.status = sinon.stub().returns @res
+			@res.end = sinon.stub()
+			@req = 
+				params:
+					user_id: user_id
+					tag_id: tag_id
+				body:
+					name: @name = "new-name"
+			@controller.renameTag @req, @res
+			
+		it "should tell the repository to rename the tag", ->
+			@tagsRepository.renameTag
+				.calledWith(user_id, tag_id, @name)
+				.should.equal true
+		
+		it "should return a 204 status code", ->
+			@res.status.calledWith(204).should.equal true
+			@res.end.called.should.equal true
