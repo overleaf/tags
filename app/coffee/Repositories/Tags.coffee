@@ -1,7 +1,11 @@
 Settings = require 'settings-sharelatex'
 logger = require('logger-sharelatex')
 db = require('mongojs').connect(Settings.mongo?.url, ['tags'])
+ObjectId = require('mongojs').ObjectId
 metrics = require('../Metrics')
+
+# Note that for legacy reasons, user_id and project_ids are plain strings,
+# not ObjectIds.
 
 module.exports =
 
@@ -34,3 +38,13 @@ module.exports =
 		deleteOperation = 
 			"$pull": {project_ids:project_id}
 		db.tags.update searchOps, deleteOperation, multi:true, callback
+	
+	deleteTag: (user_id, tag_id, callback = (error) ->) ->
+		try
+			tag_id = ObjectId(tag_id)
+		catch e
+			return callback(e)
+		db.tags.remove {
+			_id: tag_id,
+			user_id: user_id
+		}, callback

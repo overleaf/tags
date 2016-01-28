@@ -7,6 +7,7 @@ assert = require('assert')
 
 user_id = "51dc93e6fb625a261300003b"
 tag_name = '123434'
+tag_id = "tag-id-123"
 project_id = "51dc93e6fb625a261300003a"
 
 describe 'Tags controller', ->
@@ -69,3 +70,24 @@ describe 'Tags controller', ->
 			@controller.removeProjectFromAllTags req, send:(result)=>
 				@tagsRepository.removeProjectFromAllTags.calledWith(user_id, project_id).should.equal true
 				done()
+	
+	describe "deleteTag", ->
+		beforeEach ->
+			@tagsRepository.deleteTag = sinon.stub().callsArg(2)
+			@res = {}
+			@res.status = sinon.stub().returns @res
+			@res.end = sinon.stub()
+			@req = 
+				params:
+					user_id: user_id
+					tag_id: tag_id
+			@controller.deleteTag @req, @res
+			
+		it "should tell the repository to delete the tag", ->
+			@tagsRepository.deleteTag
+				.calledWith(user_id, tag_id)
+				.should.equal true
+		
+		it "should return a 204 status code", ->
+			@res.status.calledWith(204).should.equal true
+			@res.end.called.should.equal true

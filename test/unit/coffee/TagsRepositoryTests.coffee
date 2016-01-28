@@ -4,6 +4,7 @@ should = chai.should()
 modulePath = "../../../app/js/Repositories/Tags.js"
 SandboxedModule = require('sandboxed-module')
 assert = require('assert')
+ObjectId = require("mongojs").ObjectId
 
 user_id = "51dc93e6fb625a261300003b"
 tag_name = '123434'
@@ -16,8 +17,11 @@ describe 'creating a user', ->
 		@findStub = sinon.stub()
 		@saveStub = sinon.stub()
 		@updateStub = sinon.stub()
+		@removeStub = sinon.stub().callsArg(1)
+		@callback = sinon.stub()
 
 		@mongojs = 
+			ObjectId: ObjectId
 			connect:=>
 				tags:
 					update: self.mongojsUpdate 
@@ -25,6 +29,7 @@ describe 'creating a user', ->
 					findOne: @findOneStub
 					save: @saveStub
 					update: @updateStub
+					remove: @removeStub
 
 		@repository = SandboxedModule.require modulePath, requires:
 			'logger-sharelatex': log:->
@@ -88,7 +93,31 @@ describe 'creating a user', ->
 					"$pull": {project_ids:project_id}
 				@updateStub.calledWith(searchOps, insertOperation).should.equal true
 				done()
-
+	
+	describe "deleteTag", ->
+		describe "with a valid tag_id", ->
+			beforeEach ->
+				@tag_id = ObjectId().toString()
+				@repository.deleteTag user_id, @tag_id, @callback
+				
+			it "should call remove in mongo", ->
+				@removeStub
+					.calledWith({
+						_id: ObjectId(@tag_id)
+						user_id: user_id
+					})
+					.should.equal true
+			
+			it "should call the callback", ->
+				@callback.called.should.equal true
+		
+		describe "with an invalid tag_id", ->
+			beforeEach ->
+				@tag_id = "not and object id"
+				@repository.deleteTag user_id, @tag_id, @callback
+		
+			it "should call the callback with and error", ->
+				@callback.calledWith(new Error()).should.equal true
 
 
 

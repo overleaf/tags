@@ -18,11 +18,17 @@ app.configure ()->
 
 app.get '/user/:user_id/tag', controller.getUserTags
 
+# app.post '/user/:user_id/tag' # createTag
+
+# Should be post /user/:user_id/tag/:tag_id/project/:project, addProjectToTag
 app.post '/user/:user_id/project/:project_id/tag', controller.addTag
 
+# Should be: del /user/user_id/tag/:tag_id/project/:project_id, removeProjectFromTag
 app.del '/user/:user_id/project/:project_id/tag', controller.removeTag
 
 app.del '/user/:user_id/project/:project_id', controller.removeProjectFromAllTags
+
+app.del '/user/:user_id/tag/:tag_id', controller.deleteTag
 
 app.get '/status', (req, res)->
 	res.send('tags sharelatex up')
