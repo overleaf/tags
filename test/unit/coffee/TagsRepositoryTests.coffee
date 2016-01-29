@@ -20,30 +20,20 @@ describe 'TagsRepository', ->
 		@removeStub = sinon.stub().callsArg(1)
 		@callback = sinon.stub()
 
-		@mongojs = 
-			ObjectId: ObjectId
-			connect:=>
-				tags:
-					update: self.mongojsUpdate 
-					find: @findStub
-					findOne: @findOneStub
-					save: @saveStub
-					update: @updateStub
-					remove: @removeStub
+		@mongojs = () =>
+			return tags:
+				update: self.mongojsUpdate 
+				find: @findStub
+				findOne: @findOneStub
+				save: @saveStub
+				update: @updateStub
+				remove: @removeStub
+		@mongojs.ObjectId = ObjectId
 
 		@repository = SandboxedModule.require modulePath, requires:
 			'logger-sharelatex': log:->
 			'settings-sharelatex': {}
 			'mongojs':@mongojs
-
-	describe 'getUserTagByName', ->
-		it "should find one document and return it", (done)->
-			stubbedTag = {name:"tag", project_ids:["1234"]}
-			@findOneStub.callsArgWith(1, null, stubbedTag)
-			@repository.getUserTagByName user_id, tag_name, (err, tag)=>
-				tag.should.equal stubbedTag
-				@findOneStub.calledWith({"user_id" : user_id, "name":tag_name}).should.equal true
-				done()
 
 	describe 'finding users tags', ->
 		it 'should find all the documents with that user id', (done)->

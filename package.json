@@ -4,14 +4,14 @@
   "description": "An API for managing project tags/folders in ShareLaTeX",
   "version": "0.0.1",
   "dependencies": {
-    "express": "3.1.0",
     "async": "0.1.22",
-    "settings-sharelatex": "git+https://github.com/sharelatex/settings-sharelatex.git#master",
+    "express": "3.1.0",
     "logger-sharelatex": "git+https://github.com/sharelatex/logger-sharelatex.git#master",
     "metrics-sharelatex": "git+https://github.com/sharelatex/metrics-sharelatex.git#master",
+    "mongojs": "^2.3.0",
     "node-statsd": "0.0.3",
-    "underscore": "1.4.4",
-    "mongojs": "0.9.4"
+    "settings-sharelatex": "git+https://github.com/sharelatex/settings-sharelatex.git#master",
+    "underscore": "1.4.4"
   },
   "devDependencies": {
     "bunyan": "^1.0.0",

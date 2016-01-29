@@ -2,28 +2,35 @@ TagsRepository = require("./Repositories/Tags")
 logger = require("logger-sharelatex")
 
 module.exports =
-
-	getUserTags: (req, res)->
+	getUserTags: (req, res, next)->
 		logger.log user_id: req.params.user_id, "getting user tags"
 		TagsRepository.getUserTags req.params.user_id, (err, tags)->
 			logger.log {err, tags, user_id: req.params.user_id}, "got tags"
 			res.json(tags)
+	
+	createTag: (req, res, next) ->
+		{user_id} = req.params
+		name = req.body.name
+		logger.log {user_id, name}, "creating tag"
+		TagsRepository.createTag user_id, name, (error, tag) ->
+			return next(error) if error?
+			res.json(tag)
 
-	addProjectToTag: (req, res)->
+	addProjectToTag: (req, res, next)->
 		{user_id, project_id, tag_id} = req.params
 		logger.log {user_id, project_id, tag_id}, "adding project to tag"
 		TagsRepository.addProjectToTag user_id, tag_id, project_id, (error) ->
 			return next(error) if error?
 			res.status(204).end()
 
-	removeProjectFromTag: (req, res)->
+	removeProjectFromTag: (req, res, next)->
 		{user_id, project_id, tag_id} = req.params
 		logger.log {user_id, project_id, tag_id}, "removing project from tag"
 		TagsRepository.removeProjectFromTag user_id, tag_id, project_id, (error) ->
 			return next(error) if error?
 			res.status(204).end()
 
-	removeProjectFromAllTags:(req, res)->
+	removeProjectFromAllTags:(req, res, next)->
 		logger.log user_id: req.params.user_id, project_id:req.params.project_id, "removing project from all tags"
 		TagsRepository.removeProjectFromAllTags req.params.user_id, req.params.project_id, (err, tags)->
 			res.send()

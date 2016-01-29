@@ -1,6 +1,6 @@
 Settings = require 'settings-sharelatex'
 logger = require('logger-sharelatex')
-db = require('mongojs').connect(Settings.mongo?.url, ['tags'])
+db = require('mongojs')(Settings.mongo?.url, ['tags'])
 ObjectId = require('mongojs').ObjectId
 metrics = require('../Metrics')
 
@@ -8,13 +8,11 @@ metrics = require('../Metrics')
 # not ObjectIds.
 
 module.exports =
-
 	getUserTags: (user_id, callback = (err, user)->)->
-		db.tags.find {"user_id" : user_id}, (err, user)->
-			callback err, user
-
-	getUserTagByName: (user_id, tag_name, callback = (err, tag)->)->
-		db.tags.findOne {"user_id" : user_id, "name":tag_name}, callback
+		db.tags.find {"user_id" : user_id}, callback
+	
+	createTag: (user_id, name, callback = (err, tag) ->) ->
+		db.tags.insert({ user_id, name, project_ids: [] }, callback)
 
 	addProjectToTag: (user_id, tag_id, project_id, callback = (error) ->)->
 		try

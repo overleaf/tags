@@ -4,11 +4,10 @@ logger.initialize("tags-sharelatex")
 express = require('express')
 app = express()
 controller = require("./app/js/TagsController")
-db = require('mongojs').connect(Settings.mongo.url, ['tags'])
 Path = require("path")
 metrics = require("metrics-sharelatex")
-metrics.initialize("tpds")
-metrics.mongodb.monitor(Path.resolve(__dirname + "/node_modules/mongojs/node_modules/mongodb"), logger)
+metrics.initialize("tags")
+# metrics.mongodb.monitor(Path.resolve(__dirname + "/node_modules/mongojs/node_modules/mongodb"), logger)
 
 app.configure ()->
 	app.use express.methodOverride()
@@ -17,7 +16,7 @@ app.configure ()->
 	app.use express.errorHandler()
 
 app.get  '/user/:user_id/tag', controller.getUserTags
-# app.post '/user/:user_id/tag' # createTag
+app.post '/user/:user_id/tag', controller.createTag
 app.post '/user/:user_id/tag/:tag_id/rename', controller.renameTag
 app.del  '/user/:user_id/tag/:tag_id', controller.deleteTag
 app.post '/user/:user_id/tag/:tag_id/project/:project_id', controller.addProjectToTag
