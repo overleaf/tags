@@ -10,7 +10,7 @@ user_id = "51dc93e6fb625a261300003b"
 tag_name = '123434'
 project_id = "51dc93e6fb625a261300003a"
 
-describe 'creating a user', ->
+describe 'TagsRepository', ->
 	beforeEach ->
 		self = @
 		@findOneStub = sinon.stub()
@@ -57,25 +57,41 @@ describe 'creating a user', ->
 				done()
 
 	describe 'addProjectToTag', ->
-		it 'should push the project id into the tag', (done)->
-			@updateStub.callsArgWith(3, null)
-
-			@repository.addProjectToTag user_id, project_id, tag_name, (err)=>
-				searchOps = 
-					user_id:user_id
-					name:tag_name	
-				insertOperation = 
-					"$addToSet": {project_ids:project_id}
-				@updateStub.calledWith(searchOps, insertOperation, {upsert:true}).should.equal true
-				done()
+		describe "with a valid tag_id", ->
+			beforeEach ->
+				@updateStub.callsArg(2)
+				@tag_id = ObjectId().toString()
+				@repository.addProjectToTag user_id, @tag_id, project_id, @callback
+				
+			it "should call update in mongo", ->
+				@updateStub
+					.calledWith({
+						_id: ObjectId(@tag_id)
+						user_id: user_id
+					}, {
+						$addToSet: { project_ids: project_id }
+					})
+					.should.equal true
+			
+			it "should call the callback", ->
+				@callback.called.should.equal true
+		
+		describe "with an invalid tag_id", ->
+			beforeEach ->
+				@tag_id = "not and object id"
+				@repository.addProjectToTag user_id, @tag_id, project_id, @callback
+		
+			it "should call the callback with and error", ->
+				@callback.calledWith(new Error()).should.equal true
 
 	describe 'removeProjectFromTag', ->
 		describe "with a valid tag_id", ->
 			beforeEach ->
+				@updateStub.callsArg(2)
 				@tag_id = ObjectId().toString()
 				@repository.removeProjectFromTag user_id, @tag_id, project_id, @callback
 				
-			it "should call remove in mongo", ->
+			it "should call update in mongo", ->
 				@updateStub
 					.calledWith({
 						_id: ObjectId(@tag_id)

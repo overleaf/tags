@@ -16,20 +16,13 @@ app.configure ()->
 	app.use metrics.http.monitor(logger)
 	app.use express.errorHandler()
 
-app.get '/user/:user_id/tag', controller.getUserTags
-
+app.get  '/user/:user_id/tag', controller.getUserTags
 # app.post '/user/:user_id/tag' # createTag
-
-# Should be post /user/:user_id/tag/:tag_id/project/:project, addProjectToTag
-app.post '/user/:user_id/project/:project_id/tag', controller.addTag
-
-app.del '/user/:user_id/tag/:tag_id/project/:project_id', controller.removeProjectFromTag
-
-app.del '/user/:user_id/project/:project_id', controller.removeProjectFromAllTags
-
 app.post '/user/:user_id/tag/:tag_id/rename', controller.renameTag
-
-app.del '/user/:user_id/tag/:tag_id', controller.deleteTag
+app.del  '/user/:user_id/tag/:tag_id', controller.deleteTag
+app.post '/user/:user_id/tag/:tag_id/project/:project_id', controller.addProjectToTag
+app.del  '/user/:user_id/tag/:tag_id/project/:project_id', controller.removeProjectFromTag
+app.del  '/user/:user_id/project/:project_id', controller.removeProjectFromAllTags
 
 app.get '/status', (req, res)->
 	res.send('tags sharelatex up')

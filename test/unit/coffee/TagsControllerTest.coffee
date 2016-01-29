@@ -35,19 +35,24 @@ describe 'Tags controller', ->
 				@tagsRepository.getUserTags.calledWith(user_id).should.equal true
 				done()
 
-
-	describe "addTag", ->
-		it "should tell the repository to add the tag for the project", (done)->
-			@tagsRepository.addProjectToTag = sinon.stub().callsArgWith(3)
-			req = 
+	describe "addProjectToTag", ->
+		beforeEach ->
+			@tagsRepository.addProjectToTag = sinon.stub().callsArg(3)
+			@req = 
 				params:
 					user_id: user_id
+					tag_id: tag_id
 					project_id: project_id
-				body:
-					name:"some tag"
-			@controller.addTag req, send:(result)=>
-				@tagsRepository.addProjectToTag.calledWith(user_id, project_id, "some tag").should.equal true
-				done()
+			@controller.addProjectToTag @req, @res
+			
+		it "should tell the repository to add the tag to the project", ->
+			@tagsRepository.addProjectToTag
+				.calledWith(user_id, tag_id, project_id)
+				.should.equal true
+		
+		it "should return a 204 status code", ->
+			@res.status.calledWith(204).should.equal true
+			@res.end.called.should.equal true
 
 	describe "removeProjectFromTag", ->
 		beforeEach ->
@@ -59,7 +64,7 @@ describe 'Tags controller', ->
 					project_id: project_id
 			@controller.removeProjectFromTag @req, @res
 			
-		it "should tell the repository to rename the tag", ->
+		it "should tell the repository to remove the tag from the project", ->
 			@tagsRepository.removeProjectFromTag
 				.calledWith(user_id, tag_id, project_id)
 				.should.equal true

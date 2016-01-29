@@ -9,10 +9,12 @@ module.exports =
 			logger.log {err, tags, user_id: req.params.user_id}, "got tags"
 			res.json(tags)
 
-	addTag: (req, res)->
-		logger.log user_id: req.params.user_id, project_id:req.params.project_id, tag_name:req.body.name, "adding tag"
-		TagsRepository.addProjectToTag req.params.user_id, req.params.project_id, req.body.name, (err, tags)->
-			res.send()
+	addProjectToTag: (req, res)->
+		{user_id, project_id, tag_id} = req.params
+		logger.log {user_id, project_id, tag_id}, "adding project to tag"
+		TagsRepository.addProjectToTag user_id, tag_id, project_id, (error) ->
+			return next(error) if error?
+			res.status(204).end()
 
 	removeProjectFromTag: (req, res)->
 		{user_id, project_id, tag_id} = req.params

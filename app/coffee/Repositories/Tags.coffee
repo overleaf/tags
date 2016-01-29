@@ -16,13 +16,17 @@ module.exports =
 	getUserTagByName: (user_id, tag_name, callback = (err, tag)->)->
 		db.tags.findOne {"user_id" : user_id, "name":tag_name}, callback
 
-	addProjectToTag: (user_id, project_id, tag_name, callback)->
-		searchOps = 
+	addProjectToTag: (user_id, tag_id, project_id, callback = (error) ->)->
+		try
+			tag_id = ObjectId(tag_id)
+		catch e
+			return callback(e)
+		searchOps =
+			_id:tag_id
 			user_id:user_id
-			name:tag_name
 		insertOperation = 
 			"$addToSet": {project_ids:project_id}
-		db.tags.update(searchOps, insertOperation, {upsert:true}, callback)
+		db.tags.update(searchOps, insertOperation, callback)
 
 	removeProjectFromTag: (user_id, tag_id, project_id, callback = (error) ->)->
 		try
