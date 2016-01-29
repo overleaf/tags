@@ -24,10 +24,14 @@ module.exports =
 			"$addToSet": {project_ids:project_id}
 		db.tags.update(searchOps, insertOperation, {upsert:true}, callback)
 
-	removeProjectFromTag: (user_id, project_id, tag_name, callback)->
-		searchOps = 
+	removeProjectFromTag: (user_id, tag_id, project_id, callback = (error) ->)->
+		try
+			tag_id = ObjectId(tag_id)
+		catch e
+			return callback(e)
+		searchOps =
+			_id:tag_id
 			user_id:user_id
-			name:tag_name
 		deleteOperation = 
 			"$pull": {project_ids:project_id}
 		db.tags.update searchOps, deleteOperation, callback

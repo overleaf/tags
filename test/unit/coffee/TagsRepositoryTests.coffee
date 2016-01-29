@@ -16,7 +16,7 @@ describe 'creating a user', ->
 		@findOneStub = sinon.stub()
 		@findStub = sinon.stub()
 		@saveStub = sinon.stub()
-		@updateStub = sinon.stub()
+		@updateStub = sinon.stub().callsArg(2)
 		@removeStub = sinon.stub().callsArg(1)
 		@callback = sinon.stub()
 
@@ -70,18 +70,31 @@ describe 'creating a user', ->
 				done()
 
 	describe 'removeProjectFromTag', ->
-		it 'should pull the project id from the tag', (done)->
-			@updateStub.callsArgWith(2, null)
-
-			@repository.removeProjectFromTag user_id, project_id, tag_name, (err)=>
-				searchOps = 
-					user_id:user_id
-					name:tag_name	
-				insertOperation = 
-					"$pull": {project_ids:project_id}
-				@updateStub.calledWith(searchOps, insertOperation).should.equal true
-				done()
-
+		describe "with a valid tag_id", ->
+			beforeEach ->
+				@tag_id = ObjectId().toString()
+				@repository.removeProjectFromTag user_id, @tag_id, project_id, @callback
+				
+			it "should call remove in mongo", ->
+				@updateStub
+					.calledWith({
+						_id: ObjectId(@tag_id)
+						user_id: user_id
+					}, {
+						$pull: { project_ids: project_id }
+					})
+					.should.equal true
+			
+			it "should call the callback", ->
+				@callback.called.should.equal true
+		
+		describe "with an invalid tag_id", ->
+			beforeEach ->
+				@tag_id = "not and object id"
+				@repository.removeProjectFromTag user_id, @tag_id, project_id, @callback
+		
+			it "should call the callback with and error", ->
+				@callback.calledWith(new Error()).should.equal true
 
 	describe 'removeProjectFromAllTags', ->
 		it 'should pull the project id from the tag', (done)->

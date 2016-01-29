@@ -14,6 +14,9 @@ describe 'Tags controller', ->
 	beforeEach ->
 		self = @
 		@tagsRepository = {}
+		@res = {}
+		@res.status = sinon.stub().returns @res
+		@res.end = sinon.stub()
 		@controller = SandboxedModule.require modulePath, requires:
 			'logger-sharelatex': log:->
 			'./Repositories/Tags':@tagsRepository
@@ -46,19 +49,24 @@ describe 'Tags controller', ->
 				@tagsRepository.addProjectToTag.calledWith(user_id, project_id, "some tag").should.equal true
 				done()
 
-
-	describe "removeTag", ->
-		it "should tell the repository to add the tag for the project", (done)->
-			@tagsRepository.removeProjectFromTag = sinon.stub().callsArgWith(3)
-			req = 
+	describe "removeProjectFromTag", ->
+		beforeEach ->
+			@tagsRepository.removeProjectFromTag = sinon.stub().callsArg(3)
+			@req = 
 				params:
 					user_id: user_id
+					tag_id: tag_id
 					project_id: project_id
-				body:
-					name:"some tag"
-			@controller.removeTag req, send:(result)=>
-				@tagsRepository.removeProjectFromTag.calledWith(user_id, project_id, "some tag").should.equal true
-				done()
+			@controller.removeProjectFromTag @req, @res
+			
+		it "should tell the repository to rename the tag", ->
+			@tagsRepository.removeProjectFromTag
+				.calledWith(user_id, tag_id, project_id)
+				.should.equal true
+		
+		it "should return a 204 status code", ->
+			@res.status.calledWith(204).should.equal true
+			@res.end.called.should.equal true
 
 	describe "removeProjectFromAllTags", ->
 		it 'should tell the repository to remove that project from all the users tags', (done)->
@@ -74,9 +82,6 @@ describe 'Tags controller', ->
 	describe "deleteTag", ->
 		beforeEach ->
 			@tagsRepository.deleteTag = sinon.stub().callsArg(2)
-			@res = {}
-			@res.status = sinon.stub().returns @res
-			@res.end = sinon.stub()
 			@req = 
 				params:
 					user_id: user_id
@@ -95,9 +100,6 @@ describe 'Tags controller', ->
 	describe "renameTag", ->
 		beforeEach ->
 			@tagsRepository.renameTag = sinon.stub().callsArg(3)
-			@res = {}
-			@res.status = sinon.stub().returns @res
-			@res.end = sinon.stub()
 			@req = 
 				params:
 					user_id: user_id
