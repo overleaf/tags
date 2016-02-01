@@ -1,8 +1,8 @@
 Settings = require 'settings-sharelatex'
 logger = require('logger-sharelatex')
-db = require('mongojs')(Settings.mongo?.url, ['tags'])
+mongojs = require('mongojs')
+db = mongojs(Settings.mongo?.url, ['tags'])
 ObjectId = require('mongojs').ObjectId
-metrics = require('../Metrics')
 
 # Note that for legacy reasons, user_id and project_ids are plain strings,
 # not ObjectIds.

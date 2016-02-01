@@ -3,9 +3,10 @@ logger = require("logger-sharelatex")
 
 module.exports =
 	getUserTags: (req, res, next)->
-		logger.log user_id: req.params.user_id, "getting user tags"
-		TagsRepository.getUserTags req.params.user_id, (err, tags)->
-			logger.log {err, tags, user_id: req.params.user_id}, "got tags"
+		{user_id} = req.params
+		logger.log {user_id}, "getting user tags"
+		TagsRepository.getUserTags user_id, (error, tags)->
+			return next(error) if error?
 			res.json(tags)
 	
 	createTag: (req, res, next) ->

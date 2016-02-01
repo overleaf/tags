@@ -2,15 +2,20 @@
   "name": "tags-sharelatex",
   "author": "ShareLaTeX <team@sharelatex.com>",
   "description": "An API for managing project tags/folders in ShareLaTeX",
-  "version": "0.0.1",
+  "version": "0.1.4",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sharelatex/tags-sharelatex.git"
+  },
   "dependencies": {
-    "async": "0.1.22",
+    "async": "^0.1.22",
     "express": "3.1.0",
-    "logger-sharelatex": "git+https://github.com/sharelatex/logger-sharelatex.git#master",
-    "metrics-sharelatex": "git+https://github.com/sharelatex/metrics-sharelatex.git#master",
+    "logger-sharelatex": "git+https://github.com/sharelatex/logger-sharelatex.git#v1.1.0",
+    "metrics-sharelatex": "git+https://github.com/sharelatex/metrics-sharelatex.git#v1.3.0",
     "mongojs": "^2.3.0",
     "node-statsd": "0.0.3",
-    "settings-sharelatex": "git+https://github.com/sharelatex/settings-sharelatex.git#master",
+    "request": "^2.65.0",
+    "settings-sharelatex": "git+https://github.com/sharelatex/settings-sharelatex.git#v1.0.0",
     "underscore": "1.4.4"
   },
   "devDependencies": {

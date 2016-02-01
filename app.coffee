@@ -7,7 +7,10 @@ controller = require("./app/js/TagsController")
 Path = require("path")
 metrics = require("metrics-sharelatex")
 metrics.initialize("tags")
-# metrics.mongodb.monitor(Path.resolve(__dirname + "/node_modules/mongojs/node_modules/mongodb"), logger)
+metrics.mongodb.monitor(Path.resolve(__dirname + "/node_modules/mongojs/node_modules/mongodb"), logger)
+metrics.memory.monitor(logger)
+
+HealthCheckController = require("./app/js/HealthCheckController")
 
 app.configure ()->
 	app.use express.methodOverride()
@@ -26,10 +29,18 @@ app.del  '/user/:user_id/project/:project_id', controller.removeProjectFromAllTa
 app.get '/status', (req, res)->
 	res.send('tags sharelatex up')
 
+app.get '/health_check', (req, res)->
+	HealthCheckController.check (err)->
+		if err?
+			logger.err err:err, "error performing health check"
+			res.send 500
+		else
+			res.send 200
+
 app.get '*', (req, res)->
 	res.send 404
 
 host = Settings.internal?.tags?.host || "localhost"
 port = Settings.internal?.tags?.port || 3012
 app.listen port, host, ->
-	console.log "tags-sharelatex listening at #{host}:#{port}"
+	logger.info "tags starting up, listening on #{host}:#{port}"
