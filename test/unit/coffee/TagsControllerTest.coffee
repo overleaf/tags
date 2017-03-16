@@ -20,6 +20,7 @@ describe 'Tags controller', ->
 		@controller = SandboxedModule.require modulePath, requires:
 			'logger-sharelatex': log:->
 			'./Repositories/Tags':@tagsRepository
+			'metrics-sharelatex': {timeAsyncMethod: sinon.stub()}
 
 
 	describe "getUserTags", ->

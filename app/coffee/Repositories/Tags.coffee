@@ -3,11 +3,12 @@ logger = require('logger-sharelatex')
 mongojs = require('mongojs')
 db = mongojs(Settings.mongo?.url, ['tags'])
 ObjectId = require('mongojs').ObjectId
+metrics = require('metrics-sharelatex')
 
 # Note that for legacy reasons, user_id and project_ids are plain strings,
 # not ObjectIds.
 
-module.exports =
+module.exports = Tags =
 	getUserTags: (user_id, callback = (err, user)->)->
 		db.tags.find {"user_id" : user_id}, callback
 	
@@ -67,3 +68,11 @@ module.exports =
 			$set:
 				name: name
 		}, callback
+
+metrics.timeAsyncMethod(Tags, 'getUserTags', 'Tags.getUserTags', logger)
+metrics.timeAsyncMethod(Tags, 'createTag', 'Tags.createTag', logger)
+metrics.timeAsyncMethod(Tags, 'addProjectToTag', 'Tags.addProjectToTag', logger)
+metrics.timeAsyncMethod(Tags, 'removeProjectFromTag', 'Tags.removeProjectFromTag', logger)
+metrics.timeAsyncMethod(Tags, 'removeProjectFromAllTags', 'Tags.removeProjectFromAllTags', logger)
+metrics.timeAsyncMethod(Tags, 'deleteTag', 'Tags.deleteTag', logger)
+metrics.timeAsyncMethod(Tags, 'renameTag', 'Tags.renameTag', logger)
