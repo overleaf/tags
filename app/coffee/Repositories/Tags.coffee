@@ -69,10 +69,15 @@ module.exports = Tags =
 				name: name
 		}, callback
 
-metrics.timeAsyncMethod(Tags, 'getUserTags', 'Tags.getUserTags', logger)
-metrics.timeAsyncMethod(Tags, 'createTag', 'Tags.createTag', logger)
-metrics.timeAsyncMethod(Tags, 'addProjectToTag', 'Tags.addProjectToTag', logger)
-metrics.timeAsyncMethod(Tags, 'removeProjectFromTag', 'Tags.removeProjectFromTag', logger)
-metrics.timeAsyncMethod(Tags, 'removeProjectFromAllTags', 'Tags.removeProjectFromAllTags', logger)
-metrics.timeAsyncMethod(Tags, 'deleteTag', 'Tags.deleteTag', logger)
-metrics.timeAsyncMethod(Tags, 'renameTag', 'Tags.renameTag', logger)
+
+[
+	'getUserTags',
+	'createTag',
+	'addProjectToTag',
+	'removeProjectFromTag',
+	'removeProjectFromAllTags',
+	'deleteTag',
+	'renameTag'
+].map (_method) ->
+	metrics.timeAsyncMethod(Tags, _method, 'mongo.Tags', logger)
+
