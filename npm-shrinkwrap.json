@@ -265,9 +265,9 @@
       }
     },
     "metrics-sharelatex": {
-      "version": "1.3.0",
-      "from": "metrics-sharelatex@git+https://github.com/sharelatex/metrics-sharelatex.git#v1.3.0",
-      "resolved": "git+https://github.com/sharelatex/metrics-sharelatex.git#080c4aeb696edcd5d6d86f202f2c528f0661d7a6",
+      "version": "1.7.0",
+      "from": "metrics-sharelatex@git+https://github.com/sharelatex/metrics-sharelatex.git#v1.7.0",
+      "resolved": "git+https://github.com/sharelatex/metrics-sharelatex.git#d2bfafab3b90ec1f2d27353fd22c46f8a6858278",
       "dependencies": {
         "lynx": {
           "version": "0.1.1",
