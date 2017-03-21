@@ -35,6 +35,7 @@ describe 'TagsRepository', ->
 			'logger-sharelatex': log:->
 			'settings-sharelatex': {}
 			'mongojs':@mongojs
+			'metrics-sharelatex': {timeAsyncMethod: ()->}
 
 	describe 'finding users tags', ->
 		it 'should find all the documents with that user id', (done)->
