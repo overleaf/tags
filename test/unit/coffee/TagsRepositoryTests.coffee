@@ -1,5 +1,6 @@
 sinon = require('sinon')
 chai = require('chai')
+expect = chai.expect
 should = chai.should()
 modulePath = "../../../app/js/Repositories/Tags.js"
 SandboxedModule = require('sandboxed-module')
@@ -52,17 +53,18 @@ describe 'TagsRepository', ->
 				@updateStub.callsArg(2)
 				@tag_id = ObjectId().toString()
 				@repository.addProjectToTag user_id, @tag_id, project_id, @callback
-				
+
 			it "should call update in mongo", ->
-				@updateStub
-					.calledWith({
+				expect(@updateStub.lastCall.args.slice(0,2)).to.deep.equal [
+					{
 						_id: ObjectId(@tag_id)
 						user_id: user_id
-					}, {
+					},
+					{
 						$addToSet: { project_ids: project_id }
-					})
-					.should.equal true
-			
+					}
+				]
+
 			it "should call the callback", ->
 				@callback.called.should.equal true
 		
@@ -82,15 +84,16 @@ describe 'TagsRepository', ->
 				@repository.removeProjectFromTag user_id, @tag_id, project_id, @callback
 				
 			it "should call update in mongo", ->
-				@updateStub
-					.calledWith({
+				expect(@updateStub.lastCall.args.slice(0,2)).to.deep.equal [
+					{
 						_id: ObjectId(@tag_id)
 						user_id: user_id
-					}, {
+					},
+					{
 						$pull: { project_ids: project_id }
-					})
-					.should.equal true
-			
+					}
+				]
+
 			it "should call the callback", ->
 				@callback.called.should.equal true
 		
@@ -120,13 +123,11 @@ describe 'TagsRepository', ->
 				@repository.deleteTag user_id, @tag_id, @callback
 				
 			it "should call remove in mongo", ->
-				@removeStub
-					.calledWith({
-						_id: ObjectId(@tag_id)
-						user_id: user_id
-					})
-					.should.equal true
-			
+				expect(@removeStub.lastCall.args[0]).to.deep.equal {
+					_id: ObjectId(@tag_id)
+					user_id: user_id
+				}
+
 			it "should call the callback", ->
 				@callback.called.should.equal true
 		
@@ -147,14 +148,15 @@ describe 'TagsRepository', ->
 				@repository.renameTag user_id, @tag_id, @name, @callback
 				
 			it "should call remove in mongo", ->
-				@updateStub
-					.calledWith({
+				expect(@updateStub.lastCall.args.slice(0, 2)).to.deep.equal [
+					{
 						_id: ObjectId(@tag_id)
 						user_id: user_id
-					}, {
+					},
+					{
 						$set: { name: @name }
-					})
-					.should.equal true
+					}
+				]
 			
 			it "should call the callback", ->
 				@callback.called.should.equal true
