@@ -20,7 +20,7 @@ module.exports =
 			json:
 				name: tagName
 		}, (err, res, body) ->
-			if err
+			if err?
 				logger.log "Failed executing create tag health check"
 				return callback(err)
 			if res.statusCode != 200
@@ -32,7 +32,7 @@ module.exports =
 			request.post {
 				url: buildUrl("/user/#{user_id}/tag/#{tag_id}/project/#{project_id}")
 			}, (err, res, body) ->
-				if err
+				if err?
 					logger.log "Failed executing create project in tag health check"
 					return callback(err)
 				if res.statusCode != 204
@@ -42,7 +42,7 @@ module.exports =
 					url: buildUrl("/user/#{user_id}/tag"),
 					json: true
 				}, (err, res, tags) ->
-					if err
+					if err?
 						logger.log "Failed executing list tags health check"
 						return callback(err)
 					if res.statusCode != 200
@@ -60,6 +60,6 @@ module.exports =
 						url: buildUrl("/user/#{user_id}/tag/#{tag_id}"),
 						json: true
 					}, (err, res, body) ->
-						if err
+						if err?
 							logger.log "Failed executing delete tags health check"
 						callback(err, res, body)
