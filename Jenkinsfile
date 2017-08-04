@@ -6,11 +6,41 @@ pipeline {
   }
   stages {
     stage('Publish-test') {
-      steps {     
-        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'S3_CI_BUILDS_AWS_KEYS', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY']]) {
-            echo "$S3_CI_BUILDS_AWS_KEYS"
-            echo "$AWS_SECRET_ACCESS_KEY"
-            sh '$AWS help'
+      steps {
+        withCredentials([usernamePassword(credentialsId: 'S3_CI_BUILDS_AWS_KEYS', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
+          echo "$AWS_ACCESS_KEY_ID"
+          echo "$AWS_SECRET_ACCESS_KEY"
+          sh '$AWS help'
+        }
+      }
+    }
+    stage('Install') {
+      steps {
+        sh '$NODE npm install'
+        sh '$NODE npm rebuild'
+      }
+    }
+    stage('Compile') {
+      steps {
+        sh '$NODE /bin/bash -c "npm install -g grunt && grunt compile:app"'
+      }
+    }
+    stage('Test') {
+      steps {
+        sh '$NODE /bin/bash -c "npm install -g grunt && grunt test:unit"'
+      }
+    }
+    stage('Package') {
+      steps {
+        sh 'tar -cvf build.tar.gz --exclude=build.tar.gz --exclude-vcs .'
+      }
+    }
+    stage('Publish') {
+      steps {
+        withCredentials([usernamePassword(credentialsId: 'S3_CI_BUILDS_AWS_KEYS', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
+          echo "$AWS_ACCESS_KEY_ID"
+          echo "$AWS_SECRET_ACCESS_KEY"
+          sh '$AWS help'
         }
       }
     }
