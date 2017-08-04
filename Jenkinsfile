@@ -42,12 +42,7 @@ pipeline {
   }
   
   post {
-    // Always runs. And it runs before any of the other post conditions.
-    always {
-      // Let's wipe out the workspace before we finish!
-      deleteDir()
-    }
-    
+
     success {
       mail(from: "team@sharelatex.com", 
            to: "joe@sharelatex.com", 
