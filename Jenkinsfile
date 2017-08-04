@@ -12,5 +12,13 @@ $NODE npm rebuild
 $NODE /bin/bash -c "npm install -g grunt && grunt compile:app"'''
       }
     }
+    stage('Test') {
+      steps {
+        sh '''NODE="docker run --rm -v `pwd`:/app --workdir /app node:4"
+
+$NODE /bin/bash -c "npm install -g grunt && grunt test:unit"
+'''
+      }
+    }
   }
 }
