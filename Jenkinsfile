@@ -2,7 +2,7 @@ pipeline {
   agent any
   environment {
      NODE = "docker run --rm -v $WORKSPACE:/app --workdir /app node:4"
-     AWS = "docker run --rm -v $WORKSPACE:/app --workdir /app mrjgreen/docker-aws aws"
+     AWS = "docker run --rm -v $WORKSPACE:/app --workdir /app mrjgreen/docker-awscli aws"
   }
   stages {
     stage('Install') {
