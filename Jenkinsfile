@@ -1,7 +1,7 @@
 pipeline {
   agent any
   environment {
-     NODE = "docker run --rm -v `pwd`:/app --workdir /app node:4"
+     NODE = "docker run --rm -v $WORKSPACE:/app --workdir /app node:4"
   }
   stages {
     stage('Install') {
