@@ -2,15 +2,16 @@ pipeline {
   agent any
   environment {
      NODE = "docker run --rm -v $WORKSPACE:/app --workdir /app node:4"
-     AWS = "docker run --rm -v $WORKSPACE:/app --workdir /app mrjgreen/docker-awscli"
   }
   stages {
     stage('Publish-test') {
       steps {
         withCredentials([usernamePassword(credentialsId: 'S3_CI_BUILDS_AWS_KEYS', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
-          echo "$AWS_ACCESS_KEY_ID"
-          echo "$AWS_SECRET_ACCESS_KEY"
-          sh '$AWS help'
+          sh '''docker run --rm \
+          -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
+          -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+          -v $WORKSPACE:/app --workdir /app mrjgreen/docker-awscli s3 ls s3://sl-ci-builds-staging
+          '''
         }
       }
     }
@@ -33,15 +34,6 @@ pipeline {
     stage('Package') {
       steps {
         sh 'tar -cvf build.tar.gz --exclude=build.tar.gz --exclude-vcs .'
-      }
-    }
-    stage('Publish') {
-      steps {
-        withCredentials([usernamePassword(credentialsId: 'S3_CI_BUILDS_AWS_KEYS', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
-          echo "$AWS_ACCESS_KEY_ID"
-          echo "$AWS_SECRET_ACCESS_KEY"
-          sh '$AWS help'
-        }
       }
     }
   }
