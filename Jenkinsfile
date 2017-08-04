@@ -7,7 +7,7 @@ pipeline {
   stages {
     stage('Publish-test') {
       steps {     
-        withCredentials([usernamePassword(credentialsId: 'S3_CI_BUILDS_AWS_KEYS', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]){
+        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'S3_CI_BUILDS_AWS_KEYS', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY']]) {
             echo "$S3_CI_BUILDS_AWS_KEYS"
             echo "$AWS_SECRET_ACCESS_KEY"
             sh '$AWS help'
