@@ -3,13 +3,13 @@ pipeline {
   stages {
     stage('Install') {
       steps {
-        sh '''NPM="docker run --rm -v `pwd`:/app --workdir /app node:4 npm"
+        sh '''NODE="docker run --rm -v `pwd`:/app --workdir /app node:4"
 
-$NPM install
+$NODE npm install
 
-$NPM rebuild
+$NODE npm rebuild
 
-$NPM grunt compile:app'''
+$NODE /bin/bash -c "npm install -g grunt && grunt compile:app"'''
       }
     }
   }
