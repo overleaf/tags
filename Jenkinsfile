@@ -3,7 +3,7 @@ pipeline {
   agent any
   
   environment {
-     NODE = "docker run --rm -v $WORKSPACE:/app --workdir /app node:4"
+     NODE = "docker run --rm -v $JENKINS_HOME/.npm:/root/.npm -v $WORKSPACE:/app --workdir /app node:4"
   }
  
   stages {
