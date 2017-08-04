@@ -25,7 +25,7 @@ pipeline {
     }
     stage('Package') {
       steps {
-        sh 'tar -cvf build.tar.gz --exclude=build.tar.gz --exclude-vcs .'
+        sh 'tar -czf build.tar.gz --exclude=build.tar.gz --exclude-vcs .'
       }
     }
     stage('Publish') {
