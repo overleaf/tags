@@ -12,12 +12,12 @@ pipeline {
     }
     stage('Compile') {
       steps {
-        sh '$NODE /bin/bash -c "npm install -g grunt && grunt compile:app"'
+        sh '$NODE /bin/bash -c "npm install --quiet -g grunt && grunt compile:app"'
       }
     }
     stage('Test') {
       steps {
-        sh '$NODE /bin/bash -c "npm install -g grunt && grunt test:unit"'
+        sh '$NODE /bin/bash -c "npm install --quiet -g grunt && grunt test:unit"'
       }
     }
     stage('Package') {
