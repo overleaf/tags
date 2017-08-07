@@ -7,7 +7,7 @@ pipeline {
   }
  
   stages {
-    stage('Test') {
+    stage('TestEnv') {
       steps {
         sh 'export'
       }
