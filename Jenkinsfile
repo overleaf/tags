@@ -7,6 +7,11 @@ pipeline {
   }
  
   stages {
+    stage('Test') {
+      steps {
+        sh 'export'
+      }
+    }
     stage('Install') {
       steps {
         sh '$NODE npm install'
