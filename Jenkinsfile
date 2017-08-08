@@ -2,16 +2,16 @@ pipeline {
   
   agent any
   
+  triggers {
+    pollSCM('* * * * *')
+    cron('*/5 * * * *')
+  }
+  
   environment {
      NODE = "docker run --rm -v /var/lib/jenkins/.npm:/root/.npm -v $WORKSPACE:/app --workdir /app node:4"
   }
  
   stages {
-    stage('TestEnv') {
-      steps {
-        sh 'export'
-      }
-    }
     stage('Install') {
       steps {
         sh '$NODE npm install'
@@ -47,14 +47,6 @@ pipeline {
   }
   
   post {
-
-    success {
-      mail(from: "team@sharelatex.com", 
-           to: "joe@sharelatex.com", 
-           subject: "Jenkins build ${JOB_NAME}:${BUILD_NUMBER} passed.",
-           body: "Build: ${BUILD_URL}")
-    }
-
     failure {
       mail(from: "team@sharelatex.com", 
            to: "joe@sharelatex.com", 
