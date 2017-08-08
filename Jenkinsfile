@@ -48,9 +48,9 @@ pipeline {
   
   post {
     failure {
-      mail(from: "team@sharelatex.com", 
-           to: "joe@sharelatex.com", 
-           subject: "Jenkins build ${JOB_NAME}:${BUILD_NUMBER} failed.",
+      mail(from: "alerts@sharelatex.com", 
+           to: "team@sharelatex.com", 
+           subject: "Jenkins build failed: ${JOB_NAME}:${BUILD_NUMBER}",
            body: "Build: ${BUILD_URL}")
     }
   }
