@@ -30,6 +30,7 @@ pipeline {
     }
     stage('Package') {
       steps {
+        sh 'touch build.tar.gz' // Avoid tar warning about files changing during read
         sh 'tar -czf build.tar.gz --exclude=build.tar.gz --exclude-vcs .'
       }
     }
