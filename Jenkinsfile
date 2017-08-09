@@ -39,7 +39,7 @@ pipeline {
           sh '''docker run --rm \
           -e AWS_ACCESS_KEY_ID=$AWS_ID \
           -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET \
-          -v $WORKSPACE:/app --workdir /app mrjgreen/docker-awscli s3 cp build.tar.gz s3://${S3_BUCKET_BUILD_ARTEFACTS}/${JOB_NAME}/${BUILD_NUMBER}.tar.gz
+          -v $WORKSPACE:/app --workdir /app sharelatex/awscli s3 cp build.tar.gz s3://${S3_BUCKET_BUILD_ARTEFACTS}/${JOB_NAME}/${BUILD_NUMBER}.tar.gz
           '''
         }
       }
