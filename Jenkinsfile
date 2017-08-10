@@ -1,31 +1,45 @@
 pipeline {
   
-  agent any
-  
+  agent {
+    docker {
+      image 'node:4.2.1'
+      args "-v /var/lib/jenkins/.npm:/tmp/.npm"
+    }
+  }
+
+  environment  {
+      HOME = "/tmp"
+  }
+
   triggers {
     pollSCM('* * * * *')
     cron('@daily')
   }
-  
-  environment {
-     NODE = "docker run --rm -v /var/lib/jenkins/.npm:/root/.npm -v $WORKSPACE:/app --workdir /app node:4"
-  }
- 
+
   stages {
+    stage('Set up') {
+      steps {
+        // we need to disable logallrefupdates, else git clones during the npm install will require git to lookup the user id
+        // which does not exist in the container's /etc/passwd file, causing the clone to fail.
+        sh 'git config --global core.logallrefupdates false'
+      }
+    }
     stage('Install') {
       steps {
-        sh '$NODE npm install'
-        sh '$NODE npm rebuild'
+        sh 'rm -fr node_modules'
+        sh 'npm install'
+        sh 'npm rebuild'
+        sh 'npm install --quiet grunt-cli'
       }
     }
     stage('Compile') {
       steps {
-        sh '$NODE /bin/bash -c "npm install --quiet -g grunt && grunt compile:app"'
+        sh 'node_modules/.bin/grunt compile:app'
       }
     }
     stage('Test') {
       steps {
-        sh '$NODE /bin/bash -c "npm install --quiet -g grunt && grunt test:unit"'
+        sh 'node_modules/.bin/grunt test:unit'
       }
     }
     stage('Package') {
@@ -36,12 +50,8 @@ pipeline {
     }
     stage('Publish') {
       steps {
-        withCredentials([usernamePassword(credentialsId: 'S3_CI_BUILDS_AWS_KEYS', passwordVariable: 'AWS_SECRET', usernameVariable: 'AWS_ID')]) {
-          sh '''docker run --rm \
-          -e AWS_ACCESS_KEY_ID=$AWS_ID \
-          -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET \
-          -v $WORKSPACE:/app --workdir /app sharelatex/awscli s3 cp build.tar.gz s3://${S3_BUCKET_BUILD_ARTEFACTS}/${JOB_NAME}/${BUILD_NUMBER}.tar.gz
-          '''
+        withAWS(credentials:'S3_CI_BUILDS_AWS_KEYS', region:'us-east-1') {
+            s3Upload(file:'build.tar.gz', bucket:"${S3_BUCKET_BUILD_ARTEFACTS}", path:"${JOB_NAME}/${BUILD_NUMBER}.tar.gz")
         }
       }
     }
