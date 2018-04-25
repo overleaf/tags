@@ -4,7 +4,7 @@ pipeline {
   
   agent {
     docker {
-      image 'node:8.11.1'
+      image 'node:6.14.1'
       args "-v /var/lib/jenkins/.npm:/tmp/.npm"
     }
   }
