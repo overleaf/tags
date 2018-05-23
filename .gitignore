@@ -2,6 +2,8 @@
 **.swo
 app/js/*
 app.js
+**/*.map
 test/UnitTests/js/*
 node_modules/*
 test/unit/js/*
+build.tar.gz
