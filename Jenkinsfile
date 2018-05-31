@@ -33,7 +33,9 @@ pipeline {
 
     stage('Package and publish build') {
       steps {
+        sh 'docker login -u _json_key --password-stdin https://gcr.io < $(GCR_KEY_PATH)'
         sh 'make publish'
+        sh 'docker logout https://gcr.io'
       }
     }
 

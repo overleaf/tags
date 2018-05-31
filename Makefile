@@ -37,7 +37,6 @@ build:
 	docker build --pull --tag gcr.io/csh-gcdm-test/$(PROJECT_NAME):$(BRANCH_NAME)-$(BUILD_NUMBER) .
 
 publish:
-	docker login -u _json_key --password-stdin https://gcr.io < $(GCR_KEY_PATH)
 	docker push gcr.io/csh-gcdm-test/$(PROJECT_NAME):$(BRANCH_NAME)-$(BUILD_NUMBER)
 
 .PHONY: clean test test_unit test_acceptance test_clean build publish
