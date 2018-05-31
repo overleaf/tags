@@ -2,9 +2,8 @@ String cron_string = BRANCH_NAME == "master" ? "@daily" : ""
 
 pipeline {
   agent any
-
   environment {
-    GCR_KEY_PATH = credentials('docker-push-plan-b')
+    DOCKER_REPO_KEY_PATH = credentials('docker-repo-key')
   }
 
   triggers {
@@ -33,7 +32,7 @@ pipeline {
 
     stage('Package and publish build') {
       steps {
-        sh 'docker login -u _json_key --password-stdin https://gcr.io < ${GCR_KEY_PATH}'
+        sh 'docker login -u _json_key --password-stdin https://gcr.io/csh-gcdm-test < ${DOCKER_REPO_KEY_PATH}'
         sh 'make publish'
         sh 'docker logout https://gcr.io'
       }
