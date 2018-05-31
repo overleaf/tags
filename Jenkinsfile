@@ -3,6 +3,10 @@ String cron_string = BRANCH_NAME == "master" ? "@daily" : ""
 pipeline {
   agent any
 
+  environment {
+    GCR_KEY_PATH = credentials('docker-push-plan-b')
+  }
+
   triggers {
     pollSCM('* * * * *')
     cron(cron_string)
