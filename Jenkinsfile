@@ -59,6 +59,7 @@ pipeline {
   post {
     always {
       sh 'DOCKER_COMPOSE_FLAGS="-f docker-compose.ci.yml" make test_clean'
+      sh 'make clean'
     }
 
     failure {
