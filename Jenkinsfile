@@ -36,6 +36,12 @@ pipeline {
         sh 'DOCKER_REPO=gcr.io/csh-gcdm-test make publish'
         sh 'docker logout https://gcr.io/csh-gcdm-test'
         
+        withCredentials([file(credentialsId: 'gcr.io_csh-gcdm-test2', variable: 'DOCKER_REPO_KEY_PATH')]) {
+          sh 'docker login -u _json_key --password-stdin https://gcr.io/csh-gcdm-test2 < ${DOCKER_REPO_KEY_PATH}'
+        }
+        sh 'DOCKER_REPO=gcr.io/csh-gcdm-test2 make publish'
+        sh 'docker logout https://gcr.io/csh-gcdm-test2'
+        
       }
     }
 
