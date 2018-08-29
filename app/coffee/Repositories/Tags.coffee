@@ -14,6 +14,7 @@ module.exports = Tags =
 	
 	createTag: (user_id, name, callback = (err, tag) ->) ->
 		db.tags.insert({ user_id, name, project_ids: [] }, (err, tag) ->
+			# on duplicate key error return existing tag
 			if err && err.code == 11000
 				return db.tags.findOne({user_id, name}, callback)
 			callback err, tag

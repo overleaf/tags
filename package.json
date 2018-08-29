@@ -9,14 +9,7 @@
   },
   "scripts": {
     "compile:app": "coffee -o app/js -c app/coffee && coffee -c app.coffee",
-    "compile:unit_tests": "[ ! -e test/unit/coffee ] &&  echo 'No unit tests to compile' || coffee -o test/unit/js -c test/unit/coffee",
-    "compile:acceptance_tests": "[ ! -e test/acceptance/coffee ] && echo 'No acceptance tests to compile' || coffee -o test/acceptance/js -c test/acceptance/coffee",
-    "start": "npm run compile:app && node app.js",
-    "test:acceptance": "npm run compile:app && npm run compile:acceptance_tests && npm run test:acceptance:_run -- --grep=$MOCHA_GREP",
-    "test:unit": "npm run compile:app && npm run compile:unit_tests && npm run test:unit:_run -- --grep=$MOCHA_GREP",
-    "test:acceptance:_run": "mocha --recursive --reporter spec --timeout 15000 --exit $@ test/acceptance/js",
-    "test:unit:_run": "mocha --recursive --exit --reporter spec $@ test/unit/js"
-
+    "start": "npm run compile:app && node app.js"
   },
   "dependencies": {
     "async": "^0.1.22",
