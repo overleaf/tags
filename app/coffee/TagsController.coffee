@@ -17,10 +17,26 @@ module.exports =
 			return next(error) if error?
 			res.json(tag)
 
+	updateTagUserIds: (req, res, next)->
+		old_user_id = req.params.user_id
+		new_user_id = req.body.user_id
+		logger.log {old_user_id, new_user_id}, "updating user_id for tags"
+		TagsRepository.updateTagUserIds old_user_id, new_user_id, (error)->
+			return next(error) if error?
+			res.status(204).end()
+
 	addProjectToTag: (req, res, next)->
 		{user_id, project_id, tag_id} = req.params
 		logger.log {user_id, project_id, tag_id}, "adding project to tag"
 		TagsRepository.addProjectToTag user_id, tag_id, project_id, (error) ->
+			return next(error) if error?
+			res.status(204).end()
+
+	addProjectToTagName: (req, res, next)->
+		{user_id, project_id} = req.params
+		name = req.body.name
+		logger.log {user_id, project_id, name}, "adding project to tag name"
+		TagsRepository.addProjectToTagName user_id, name, project_id, (error) ->
 			return next(error) if error?
 			res.status(204).end()
 

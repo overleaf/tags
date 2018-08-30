@@ -55,6 +55,45 @@ describe 'Tags controller', ->
 			@res.status.calledWith(204).should.equal true
 			@res.end.called.should.equal true
 
+	describe "addProjectToTagName", ->
+		beforeEach ->
+			@tagsRepository.addProjectToTagName = sinon.stub().callsArg(3)
+			@req =
+				body:
+					name: tag_name
+				params:
+					user_id: user_id
+					project_id: project_id
+			@controller.addProjectToTagName @req, @res
+
+		it "should tell the repository to add the tag to the project", ->
+			@tagsRepository.addProjectToTagName
+				.calledWith(user_id, tag_name, project_id)
+				.should.equal true
+
+		it "should return a 204 status code", ->
+			@res.status.calledWith(204).should.equal true
+			@res.end.called.should.equal true
+
+	describe "updateTagUserIds", ->
+		beforeEach ->
+			@tagsRepository.updateTagUserIds = sinon.stub().callsArg(2)
+			@req =
+				body:
+					user_id: "new-user-id"
+				params:
+					user_id: "old-user-id"
+			@controller.updateTagUserIds @req, @res
+
+		it "should tell the repository to update user ids", ->
+			@tagsRepository.updateTagUserIds
+				.calledWith("old-user-id", "new-user-id")
+				.should.equal true
+
+		it "should return a 204 status code", ->
+			@res.status.calledWith(204).should.equal true
+			@res.end.called.should.equal true
+
 	describe "removeProjectFromTag", ->
 		beforeEach ->
 			@tagsRepository.removeProjectFromTag = sinon.stub().callsArg(3)
