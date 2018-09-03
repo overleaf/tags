@@ -77,6 +77,49 @@ describe 'TagsRepository', ->
 			it "should call the callback with and error", ->
 				@callback.calledWith(new Error()).should.equal true
 
+	describe 'addProjectToTagName', ->
+		beforeEach ->
+			@updateStub.callsArg(3)
+			@repository.addProjectToTagName user_id, tag_name, project_id, @callback
+
+		it "should call update in mongo", ->
+			expect(@updateStub.lastCall.args.slice(0,3)).to.deep.equal [
+				{
+					name: tag_name
+					user_id: user_id
+				},
+				{
+					$addToSet: { project_ids: project_id }
+				},
+				{
+					upsert: true
+				}
+			]
+
+		it "should call the callback", ->
+			@callback.called.should.equal true
+
+	describe 'updateTagUserIds', ->
+		beforeEach ->
+			@updateStub.callsArg(3)
+			@repository.updateTagUserIds "old-user-id", "new-user-id", @callback
+
+		it "should call update in mongo", ->
+			expect(@updateStub.lastCall.args.slice(0,3)).to.deep.equal [
+				{
+					user_id: "old-user-id"
+				},
+				{
+					$set: { user_id: "new-user-id" }
+				},
+				{
+					multi: true
+				}
+			]
+
+		it "should call the callback", ->
+			@callback.called.should.equal true
+
 	describe 'removeProjectFromTag', ->
 		describe "with a valid tag_id", ->
 			beforeEach ->
