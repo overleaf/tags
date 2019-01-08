@@ -19,9 +19,11 @@ app.configure ()->
 
 app.get  '/user/:user_id/tag', controller.getUserTags
 app.post '/user/:user_id/tag', controller.createTag
+app.put '/user/:user_id/tag', controller.updateTagUserIds
 app.post '/user/:user_id/tag/:tag_id/rename', controller.renameTag
 app.del  '/user/:user_id/tag/:tag_id', controller.deleteTag
 app.post '/user/:user_id/tag/:tag_id/project/:project_id', controller.addProjectToTag
+app.post '/user/:user_id/tag/project/:project_id', controller.addProjectToTagName
 app.del  '/user/:user_id/tag/:tag_id/project/:project_id', controller.removeProjectFromTag
 app.del  '/user/:user_id/project/:project_id', controller.removeProjectFromAllTags
 

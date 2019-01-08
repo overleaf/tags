@@ -13,7 +13,19 @@ module.exports = Tags =
 		db.tags.find {"user_id" : user_id}, callback
 	
 	createTag: (user_id, name, callback = (err, tag) ->) ->
-		db.tags.insert({ user_id, name, project_ids: [] }, callback)
+		db.tags.insert({ user_id, name, project_ids: [] }, (err, tag) ->
+			# on duplicate key error return existing tag
+			if err && err.code == 11000
+				return db.tags.findOne({user_id, name}, callback)
+			callback err, tag
+		)
+
+	updateTagUserIds: (old_user_id, new_user_id, callback = (err, tag) ->) ->
+		searchOps =
+			user_id:old_user_id
+		updateOperation = 
+			"$set": {user_id:new_user_id}
+		db.tags.update(searchOps, updateOperation, multi:true, callback)
 
 	addProjectToTag: (user_id, tag_id, project_id, callback = (error) ->)->
 		try
@@ -26,6 +38,14 @@ module.exports = Tags =
 		insertOperation = 
 			"$addToSet": {project_ids:project_id}
 		db.tags.update(searchOps, insertOperation, callback)
+
+	addProjectToTagName: (user_id, name, project_id, callback = (error) ->)->
+		searchOps =
+			name:name
+			user_id:user_id
+		insertOperation =
+			"$addToSet": {project_ids:project_id}
+		db.tags.update(searchOps, insertOperation, upsert:true, callback)
 
 	removeProjectFromTag: (user_id, tag_id, project_id, callback = (error) ->)->
 		try
