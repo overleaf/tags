@@ -1,3 +1,5 @@
+metrics = require("metrics-sharelatex")
+metrics.initialize("tags")
 Settings = require 'settings-sharelatex'
 logger = require 'logger-sharelatex'
 logger.initialize("tags-sharelatex")
@@ -5,8 +7,6 @@ express = require('express')
 app = express()
 controller = require("./app/js/TagsController")
 Path = require("path")
-metrics = require("metrics-sharelatex")
-metrics.initialize("tags")
 metrics.memory.monitor(logger)
 
 HealthCheckController = require("./app/js/HealthCheckController")
@@ -16,12 +16,15 @@ app.configure ()->
 	app.use express.bodyParser()
 	app.use metrics.http.monitor(logger)
 	app.use express.errorHandler()
+metrics.injectMetricsRoute(app)
 
 app.get  '/user/:user_id/tag', controller.getUserTags
 app.post '/user/:user_id/tag', controller.createTag
+app.put '/user/:user_id/tag', controller.updateTagUserIds
 app.post '/user/:user_id/tag/:tag_id/rename', controller.renameTag
 app.del  '/user/:user_id/tag/:tag_id', controller.deleteTag
 app.post '/user/:user_id/tag/:tag_id/project/:project_id', controller.addProjectToTag
+app.post '/user/:user_id/tag/project/:project_id', controller.addProjectToTagName
 app.del  '/user/:user_id/tag/:tag_id/project/:project_id', controller.removeProjectFromTag
 app.del  '/user/:user_id/project/:project_id', controller.removeProjectFromAllTags
 

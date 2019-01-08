@@ -17,6 +17,7 @@ describe 'TagsRepository', ->
 		@findOneStub = sinon.stub()
 		@findStub = sinon.stub()
 		@saveStub = sinon.stub()
+		@insertStub = sinon.stub().callsArg(1)
 		@updateStub = sinon.stub().callsArg(2)
 		@removeStub = sinon.stub().callsArg(1)
 		@callback = sinon.stub()
@@ -27,6 +28,7 @@ describe 'TagsRepository', ->
 				find: @findStub
 				findOne: @findOneStub
 				save: @saveStub
+				insert: @insertStub
 				update: @updateStub
 				remove: @removeStub
 		@mongojs.ObjectId = ObjectId
@@ -47,6 +49,36 @@ describe 'TagsRepository', ->
 				result[1].should.equal stubbedTags[1]
 				result[2].should.equal stubbedTags[2]
 				done()
+
+	describe "createTag", ->
+		describe "when insert succeeds", ->
+			beforeEach ->
+				@repository.createTag "user-id", "name", @callback
+
+			it "should call insert in mongo", ->
+				expect(@insertStub.lastCall.args[0]).to.deep.equal
+					user_id: "user-id"
+					name: "name"
+					project_ids: []
+
+			it "should call the callback", ->
+				@callback.called.should.equal true
+
+		describe "when insert has duplicate key error error", ->
+			beforeEach ->
+				@duplicateKeyError = new Error "Duplicate"
+				@duplicateKeyError.code = 11000
+				@insertStub.callsArgWith 1, @duplicateKeyError
+				@findOneStub.callsArgWith 1, null, "existing-tag"
+				@repository.createTag "user-id", "name", @callback
+
+			it "should get tag with findOne", ->
+				expect(@findOneStub.lastCall.args[0]).to.deep.equal
+					user_id: "user-id"
+					name: "name"
+
+			it "should callback with existing tag", ->
+				expect(@callback.lastCall.args[1]).to.equal "existing-tag"
 
 	describe 'addProjectToTag', ->
 		describe "with a valid tag_id", ->
@@ -76,6 +108,49 @@ describe 'TagsRepository', ->
 		
 			it "should call the callback with and error", ->
 				@callback.calledWith(new Error()).should.equal true
+
+	describe 'addProjectToTagName', ->
+		beforeEach ->
+			@updateStub.callsArg(3)
+			@repository.addProjectToTagName user_id, tag_name, project_id, @callback
+
+		it "should call update in mongo", ->
+			expect(@updateStub.lastCall.args.slice(0,3)).to.deep.equal [
+				{
+					name: tag_name
+					user_id: user_id
+				},
+				{
+					$addToSet: { project_ids: project_id }
+				},
+				{
+					upsert: true
+				}
+			]
+
+		it "should call the callback", ->
+			@callback.called.should.equal true
+
+	describe 'updateTagUserIds', ->
+		beforeEach ->
+			@updateStub.callsArg(3)
+			@repository.updateTagUserIds "old-user-id", "new-user-id", @callback
+
+		it "should call update in mongo", ->
+			expect(@updateStub.lastCall.args.slice(0,3)).to.deep.equal [
+				{
+					user_id: "old-user-id"
+				},
+				{
+					$set: { user_id: "new-user-id" }
+				},
+				{
+					multi: true
+				}
+			]
+
+		it "should call the callback", ->
+			@callback.called.should.equal true
 
 	describe 'removeProjectFromTag', ->
 		describe "with a valid tag_id", ->
