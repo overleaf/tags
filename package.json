@@ -1,6 +1,5 @@
 {
   
-  
   "name": "tags-sharelatex",
   "author": "ShareLaTeX <team@sharelatex.com>",
   "description": "An API for managing project tags/folders in ShareLaTeX",
