@@ -2,7 +2,6 @@
 # Instead run bin/update_build_scripts from
 # https://github.com/sharelatex/sharelatex-dev-environment
 # Version: 1.1.10
-#	$(eval CONTAINER_ID=$(shell docker ps -a | grep ${IMAGE} | awk '{print $1}' | head -n 1))
 
 BUILD_NUMBER ?= local
 BRANCH_NAME ?= $(shell git rev-parse --abbrev-ref HEAD)
@@ -48,10 +47,6 @@ CONTAINER_ID=$(shell docker ps -a --filter ancestor=$(IMAGE) -l -q)
 tar:
 	docker run $(IMAGE) tar -czf /tmp/${BUILD_NUMBER}.tar.gz --exclude=build.tar.gz --exclude-vcs .; \
 	docker cp $(CONTAINER_ID):/tmp/${BUILD_NUMBER}.tar.gz ./${BUILD_NUMBER}.tar.gz; \
-
-csh:
-	echo This is $(IMAGE);
-          VAR=$(shell echo Inner $(IMAGE))
 
 publish:
 	docker push $(DOCKER_REPO)/$(PROJECT_NAME):$(BRANCH_NAME)-$(BUILD_NUMBER)
