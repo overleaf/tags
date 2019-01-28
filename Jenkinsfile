@@ -74,7 +74,7 @@ pipeline {
       steps {
         sh 'echo ${BUILD_NUMBER} > build_number.txt'
         sh 'touch build.tar.gz' // Avoid tar warning about files changing during read
-        sh 'tar -czf build.tar.gz --exclude=build.tar.gz --exclude-vcs .'
+        sh 'make tar'
       }
     }
     stage('Publish tar.gz') {

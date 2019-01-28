@@ -35,13 +35,19 @@ test_clean:
 
 test_acceptance_pre_run:
 	@[ ! -f test/acceptance/scripts/pre-run ] && echo "tags has no pre acceptance tests task" || $(DOCKER_COMPOSE) run --rm test_acceptance test/acceptance/scripts/pre-run
+
 build:
 	docker build --pull --tag ci/$(PROJECT_NAME):$(BRANCH_NAME)-$(BUILD_NUMBER) \
 		--tag gcr.io/overleaf-ops/$(PROJECT_NAME):$(BRANCH_NAME)-$(BUILD_NUMBER) \
 		.
 
-publish:
+tar:
+	IMAGE=ci/$(PROJECT_NAME):$(BRANCH_NAME)-$(BUILD_NUMBER)
+	docker run $(IMAGE) tar -czf /tmp/${BUILD_NUMBER}.tar.gz --exclude=build.tar.gz --exclude-vcs .
+	CONTAINER_ID=$(shell docker ps -a | grep ${IMAGE} | awk '{print $1}' | head -n 1)
+	docker cp ${CONTAINER_ID}:/tmp/${BUILD_NUMBER}.tar.gz ./${BUILD_NUMBER}.tar.gz
 
+publish:
 	docker push $(DOCKER_REPO)/$(PROJECT_NAME):$(BRANCH_NAME)-$(BUILD_NUMBER)
 
 .PHONY: clean test test_unit test_acceptance test_clean build publish
