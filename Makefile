@@ -2,6 +2,7 @@
 # Instead run bin/update_build_scripts from
 # https://github.com/sharelatex/sharelatex-dev-environment
 # Version: 1.1.10
+#	$(eval CONTAINER_ID=$(shell docker ps -a | grep ${IMAGE} | awk '{print $1}' | head -n 1))
 
 BUILD_NUMBER ?= local
 BRANCH_NAME ?= $(shell git rev-parse --abbrev-ref HEAD)
@@ -41,13 +42,20 @@ build:
 		--tag gcr.io/overleaf-ops/$(PROJECT_NAME):$(BRANCH_NAME)-$(BUILD_NUMBER) \
 		.
 
+IMAGE=ci/$(PROJECT_NAME):$(BRANCH_NAME)-$(BUILD_NUMBER)
+CONTAINER_ID=$(shell docker ps -a --filter ancestor=$(IMAGE) -l -q)
+
 tar:
-	IMAGE=ci/$(PROJECT_NAME):$(BRANCH_NAME)-$(BUILD_NUMBER)
-	docker run $(IMAGE) tar -czf /tmp/${BUILD_NUMBER}.tar.gz --exclude=build.tar.gz --exclude-vcs .
-	CONTAINER_ID=$(shell docker ps -a | grep ${IMAGE} | awk '{print $1}' | head -n 1)
-	docker cp ${CONTAINER_ID}:/tmp/${BUILD_NUMBER}.tar.gz ./${BUILD_NUMBER}.tar.gz
+	docker run $(IMAGE) tar -czf /tmp/${BUILD_NUMBER}.tar.gz --exclude=build.tar.gz --exclude-vcs .; \
+	docker cp $(CONTAINER_ID):/tmp/${BUILD_NUMBER}.tar.gz ./${BUILD_NUMBER}.tar.gz; \
+
+csh:
+	echo This is $(IMAGE);
+          VAR=$(shell echo Inner $(IMAGE))
 
 publish:
 	docker push $(DOCKER_REPO)/$(PROJECT_NAME):$(BRANCH_NAME)-$(BUILD_NUMBER)
 
 .PHONY: clean test test_unit test_acceptance test_clean build publish
+
+.EXPORT_ALL_VARIABLES:
