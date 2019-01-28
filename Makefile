@@ -53,3 +53,4 @@ publish:
 
 .PHONY: clean test test_unit test_acceptance test_clean build publish
 
+.EXPORT_ALL_VARIABLES:
