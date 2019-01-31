@@ -5,7 +5,7 @@ module.exports = Settings =
 			host: process.env["LISTEN_ADDRESS"] or "localhost"
 
 	mongo:
-		url : "mongodb://#{process.env["MONGO_HOST"] or "localhost"}/sharelatex"
+		url: process.env['MONGO_CONNECTION_STRING'] or "mongodb://#{process.env["MONGO_HOST"] or "localhost"}/sharelatex"
 
 	tags:
 		healthCheck:

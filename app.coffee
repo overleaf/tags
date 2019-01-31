@@ -1,12 +1,12 @@
+metrics = require("metrics-sharelatex")
+metrics.initialize("tags")
 Settings = require 'settings-sharelatex'
 logger = require 'logger-sharelatex'
-logger.initialize("tags-sharelatex")
+logger.initialize("tags")
 express = require('express')
 app = express()
 controller = require("./app/js/TagsController")
 Path = require("path")
-metrics = require("metrics-sharelatex")
-metrics.initialize("tags")
 metrics.memory.monitor(logger)
 
 HealthCheckController = require("./app/js/HealthCheckController")
@@ -16,6 +16,7 @@ app.configure ()->
 	app.use express.bodyParser()
 	app.use metrics.http.monitor(logger)
 	app.use express.errorHandler()
+metrics.injectMetricsRoute(app)
 
 app.get  '/user/:user_id/tag', controller.getUserTags
 app.post '/user/:user_id/tag', controller.createTag
