@@ -2,7 +2,7 @@ metrics = require("metrics-sharelatex")
 metrics.initialize("tags")
 Settings = require 'settings-sharelatex'
 logger = require 'logger-sharelatex'
-logger.initialize("tags-sharelatex")
+logger.initialize("tags")
 express = require('express')
 app = express()
 controller = require("./app/js/TagsController")
