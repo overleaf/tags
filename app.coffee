@@ -28,6 +28,10 @@ app.post '/user/:user_id/tag/project/:project_id', controller.addProjectToTagNam
 app.del  '/user/:user_id/tag/:tag_id/project/:project_id', controller.removeProjectFromTag
 app.del  '/user/:user_id/project/:project_id', controller.removeProjectFromAllTags
 
+
+app.get '/hello_worldddddd', (req, res)->
+	res.send('tags sharelatex up')
+
 app.get '/status', (req, res)->
 	res.send('tags sharelatex up')
 
