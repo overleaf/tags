@@ -25,7 +25,7 @@
     "coffee-script": "^1.7.1",
     "express": "3.1.0",
     "logger-sharelatex": "^1.6.0",
-    "metrics-sharelatex": "^2.1.1",
+    "metrics-sharelatex": "^2.1.2",
     "mongojs": "^2.4.0",
     "node-statsd": "0.0.3",
     "request": "^2.65.0",
