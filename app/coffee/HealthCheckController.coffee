@@ -14,7 +14,7 @@ module.exports =
 	check : (callback)->
 		project_id = ObjectId()
 		user_id = ObjectId(settings.tags.healthCheck.user_id)
-		tagName = "smoke-test-tag"
+		tagName = "smoke-test-tag-#{Math.floor(Math.random() * 50)}" # use a random tag name to reduce conflicts
 		request.post {
 			url: buildUrl("/user/#{user_id}/tag"),
 			json:
