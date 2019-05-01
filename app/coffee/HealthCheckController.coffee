@@ -65,10 +65,10 @@ module.exports = HealthCheck =
 						if err?
 							logger.log "Failed executing delete tags health check"
 						otherTags = (tag for tag in tags when tag._id isnt tag_id)
-						HealthCheck._removeOldTags otherTags, () ->
+						HealthCheck._removeOldTags user_id, otherTags, () ->
 							callback(err, res, body)
 
-	_removeOldTags: (tags, callback) ->
+	_removeOldTags: (user_id, tags, callback) ->
 		now = new Date()
 		getAge = (tag) ->
 			(now - ObjectId(tag._id).getTimestamp())
