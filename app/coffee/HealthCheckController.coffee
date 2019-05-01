@@ -14,7 +14,7 @@ module.exports =
 	check : (callback)->
 		project_id = ObjectId()
 		user_id = ObjectId(settings.tags.healthCheck.user_id)
-		tagName = "smoke-test-tag"
+		tagName = "smoke-test-tag-#{Math.floor(Math.random() * 50)}" # use a random tag name to reduce conflicts
 		request.post {
 			url: buildUrl("/user/#{user_id}/tag"),
 			json:
@@ -25,6 +25,8 @@ module.exports =
 				return callback(err)
 			if res.statusCode != 200
 				return callback new Error("unexpected statusCode: #{res.statusCode}")
+			if !body?._id?
+				return callback new Error("#{tagName} tag not created - clobbered by another health check?")
 			logger.log {tag: body, user_id, project_id}, "health check created tag"
 			tag_id = body._id
 
