@@ -10,7 +10,7 @@ request = request.defaults({timeout: 3000})
 buildUrl = (path) ->
 	"http://localhost:#{port}#{path}"
 
-module.exports =
+module.exports = HealthCheck = 
 	check : (callback)->
 		project_id = ObjectId()
 		user_id = ObjectId(settings.tags.healthCheck.user_id)
@@ -64,4 +64,22 @@ module.exports =
 					}, (err, res, body) ->
 						if err?
 							logger.log "Failed executing delete tags health check"
-						callback(err, res, body)
+						otherTags = (tag for tag in tags when tag._id isnt tag_id)
+						HealthCheck._removeOldTags user_id, otherTags, () ->
+							callback(err, res, body)
+
+	_removeOldTags: (user_id, tags, callback) ->
+		now = new Date()
+		getAge = (tag) ->
+			(now - ObjectId(tag._id).getTimestamp())
+		# clean up tags older than 5 minutes
+		oldTags = (tag for tag in tags when getAge(tag) > 5*60*1000)
+		removeTag = (tag, cb) ->
+			logger.log {tag:tag}, "removing old tag"
+			request.del {
+				url: buildUrl("/user/#{user_id}/tag/#{tag._id}")
+				json: true
+			}, (err) ->
+				cb() # ignore failures removing old tags
+		# remove a limited number tags on each pass to avoid timeouts
+		async.mapSeries oldTags.slice(0,3), removeTag, callback
