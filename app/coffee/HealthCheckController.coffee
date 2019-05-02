@@ -72,6 +72,7 @@ module.exports = HealthCheck =
 		now = new Date()
 		getAge = (tag) ->
 			(now - ObjectId(tag._id).getTimestamp())
+		# clean up tags older than 5 minutes
 		oldTags = (tag for tag in tags when getAge(tag) > 5*60*1000)
 		removeTag = (tag, cb) ->
 			logger.log {tag:tag}, "removing old tag"
@@ -80,4 +81,5 @@ module.exports = HealthCheck =
 				json: true
 			}, (err) ->
 				cb() # ignore failures removing old tags
-		async.mapSeries oldTags, removeTag, callback
+		# remove a limited number tags on each pass to avoid timeouts
+		async.mapSeries oldTags.slice(0,3), removeTag, callback
