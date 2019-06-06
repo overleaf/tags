@@ -2,6 +2,6 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '.']
 - name: 'gcr.io/$PROJECT_ID/docker-compose'
-  args: ['run --rm test_unit']
+  args: ['-f docker-compose.ci.yml','run','--rm', 'test_unit']
 - name: 'gcr.io/$PROJECT_ID/docker-compose'
-  args: ['run --rm test_acceptance']
+  args: ['-f docker-compose.ci.yml','run', '--rm', 'test_acceptance']
