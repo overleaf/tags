@@ -1,6 +1,6 @@
 steps:
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '.']
+  args: ['build', '.','-t', 'ci/tags:$BRANCH_NAME-$BUILD_NUMBER']
 - name: 'gcr.io/$PROJECT_ID/docker-compose'
   args: ['-f','docker-compose.ci.yml','run','--rm', 'test_unit']
 - name: 'gcr.io/$PROJECT_ID/docker-compose'
