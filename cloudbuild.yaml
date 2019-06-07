@@ -1,7 +1,7 @@
 steps:
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '.','-t', 'ci/tags:$BRANCH_NAME-$BUILD_ID']
-- name: 'gcr.io/$PROJECT_ID/overleaf-builder'
-  args: ['-f','docker-compose.ci.yml','run','--rm', 'test_unit']
-  env:  ['BRANCH_NAME=$BRANCH_NAME','PROJECT_NAME=tags','BUILD_NUMBER=$BUILD_ID']
+- name: 'gcr.io/$PROJECT_ID/cloud-builder'
+  args: ['test_unit']
+  env:  ['DOCKER_COMPOSE_FLAGS="-f docker-compose.ci.yml"','BUILD_NUMBER=$BUILD_ID']
 
