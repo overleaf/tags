@@ -1,13 +1,23 @@
 steps:
 - name: 'gcr.io/$PROJECT_ID/cloud-builder'
-  args: ['build']
-  env:  ['BUILD_NUMBER=$SHORT_SHA','BRANCH_NAME=$BRANCH_NAME']
+  args: 
+  - 'build'
+  env:
+  - 'BUILD_NUMBER=$SHORT_SHA'
+  - 'BRANCH_NAME=$BRANCH_NAME'
 - name: 'gcr.io/$PROJECT_ID/cloud-builder'
-  args: ['test_unit']
-  env:  ['DOCKER_COMPOSE_FLAGS=-f docker-compose.ci.yml','BUILD_NUMBER=$SHORT_SHA','BRANCH_NAME=$BRANCH_NAME']
+  args: 
+  - 'test_unit'
+  env:
+  - 'DOCKER_COMPOSE_FLAGS=-f docker-compose.ci.yml'
+  - 'BUILD_NUMBER=$SHORT_SHA'
+  - 'BRANCH_NAME=$BRANCH_NAME'
 - name: 'gcr.io/$PROJECT_ID/cloud-builder'
-  args: ['test_acceptance']
-  env:  ['DOCKER_COMPOSE_FLAGS=-f docker-compose.ci.yml','BUILD_NUMBER=$SHORT_SHA','BRANCH_NAME=$BRANCH_NAME']
-images: [
-  'gcr.io/$PROJECT_ID/tags:${BRANCH_NAME}-${SHORT_SHA}',
-]
+  args: 
+  - 'test_acceptance'
+  env:
+  - 'DOCKER_COMPOSE_FLAGS=-f docker-compose.ci.yml'
+  - 'BUILD_NUMBER=$SHORT_SHA'
+  - 'BRANCH_NAME=$BRANCH_NAME'
+images:
+  - 'gcr.io/$PROJECT_ID/tags:${BRANCH_NAME}-${SHORT_SHA}'
