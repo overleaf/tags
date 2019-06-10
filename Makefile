@@ -24,7 +24,6 @@ clean:
 test: test_unit test_acceptance
 
 test_unit:
-	echo "DOCKER_COMPOSE: $(DOCKER_COMPOSE)"
 	@[ ! -d test/unit ] && echo "tags has no unit tests" || $(DOCKER_COMPOSE) run --rm test_unit
 
 test_acceptance: test_clean test_acceptance_pre_run # clear the database before each acceptance test run
