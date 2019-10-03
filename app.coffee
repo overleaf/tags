@@ -29,7 +29,7 @@ app.del  '/user/:user_id/tag/:tag_id/project/:project_id', controller.removeProj
 app.del  '/user/:user_id/project/:project_id', controller.removeProjectFromAllTags
 
 app.get '/status', (req, res)->
-	res.send('tags sharelatex up')
+	res.send('tags sharelatex up, new version')
 
 app.get '/health_check', (req, res)->
 	HealthCheckController.check (err)->
