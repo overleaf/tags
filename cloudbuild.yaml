@@ -1,18 +1,18 @@
 steps:
-- name: 'gcr.io/$PROJECT_ID/cloud-builder'
+- name: 'gcr.io/overleaf-ops/cloud-builder'
   args: 
   - 'build'
   env:
   - 'BUILD_NUMBER=$SHORT_SHA'
   - 'BRANCH_NAME=$BRANCH_NAME'
-- name: 'gcr.io/$PROJECT_ID/cloud-builder'
+- name: 'gcr.io/overleaf-ops/cloud-builder'
   args: 
   - 'test_unit'
   env:
   - 'DOCKER_COMPOSE_FLAGS=-f docker-compose.ci.yml'
   - 'BUILD_NUMBER=$SHORT_SHA'
   - 'BRANCH_NAME=$BRANCH_NAME'
-- name: 'gcr.io/$PROJECT_ID/cloud-builder'
+- name: 'gcr.io/overleaf-ops/cloud-builder'
   args: 
   - 'test_acceptance'
   env:
