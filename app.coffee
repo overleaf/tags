@@ -1,3 +1,4 @@
+
 metrics = require("metrics-sharelatex")
 metrics.initialize("tags")
 Settings = require 'settings-sharelatex'
