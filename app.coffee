@@ -44,5 +44,9 @@ app.get '*', (req, res)->
 
 host = Settings.internal?.tags?.host || "localhost"
 port = Settings.internal?.tags?.port || 3012
-app.listen port, host, ->
-	logger.info "tags starting up, listening on #{host}:#{port}"
+
+module.exports = app
+
+if !module.parent
+	app.listen port, host, ->
+		logger.info "tags starting up, listening on #{host}:#{port}"
