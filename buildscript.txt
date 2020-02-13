@@ -1,10 +1,10 @@
 tags
---language=coffeescript
 --node-version=10.19.0
---acceptance-creds=None
+--script-version=1.3.5
 --dependencies=mongo,redis
+--language=es
 --docker-repos=gcr.io/overleaf-ops
+--acceptance-creds=None
 --env-pass-through=
 --env-add=
 --public-repo=True
---script-version=1.3.5
