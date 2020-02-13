@@ -1,10 +1,4 @@
 **.swp
 **.swo
-app/js/*
-app.js
-**/*.map
-test/UnitTests/js/*
 node_modules/*
-test/unit/js/*
-test/acceptance/js
 build.tar.gz
