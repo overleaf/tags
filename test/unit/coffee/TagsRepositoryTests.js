@@ -1,3 +1,12 @@
+/* eslint-disable
+    camelcase,
+    handle-callback-err,
+    no-dupe-keys,
+    no-return-assign,
+    no-unused-vars,
+*/
+// TODO: This file was created by bulk-decaffeinate.
+// Fix any style issues and re-enable lint.
 /*
  * decaffeinate suggestions:
  * DS102: Remove unnecessary code created because of implicit returns
@@ -54,17 +63,17 @@ describe('TagsRepository', function() {
 		}
 	});});
 
-	describe('finding users tags', () => it('should find all the documents with that user id', function(done){
+	describe('finding users tags', function() { return it('should find all the documents with that user id', function(done){
         const stubbedTags = [{"name":"tag1"}, {"name":"tag2"}, {"name":"tag3"}];
         this.findStub.callsArgWith(1, null, stubbedTags);
-        return this.repository.getUserTags(user_id, function(err, result){
+        return this.repository.getUserTags(user_id, (err, result) => {
             result.length.should.equal(3);
             result[0].should.equal(stubbedTags[0]);
             result[1].should.equal(stubbedTags[1]);
             result[2].should.equal(stubbedTags[2]);
             return done();
         });
-    }));
+    }); });
 
 	describe("createTag", function() {
 		describe("when insert succeeds", function() {
@@ -231,7 +240,7 @@ describe('TagsRepository', function() {
 		});
 	});
 
-	describe('removeProjectFromAllTags', () => it('should pull the project id from the tag', function(done){
+	describe('removeProjectFromAllTags', function() { return it('should pull the project id from the tag', function(done){
         this.updateStub.callsArgWith(3, null);
         return this.repository.removeProjectFromAllTags(user_id, project_id, err=> {
             const searchOps = 
@@ -241,7 +250,7 @@ describe('TagsRepository', function() {
             this.updateStub.calledWith(searchOps, insertOperation).should.equal(true);
             return done();
         });
-    }));
+    }); });
 	
 	describe("deleteTag", function() {
 		describe("with a valid tag_id", function() {

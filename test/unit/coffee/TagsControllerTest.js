@@ -1,3 +1,10 @@
+/* eslint-disable
+    camelcase,
+    no-return-assign,
+    no-unused-vars,
+*/
+// TODO: This file was created by bulk-decaffeinate.
+// Fix any style issues and re-enable lint.
 /*
  * decaffeinate suggestions:
  * DS102: Remove unnecessary code created because of implicit returns
@@ -31,7 +38,7 @@ describe('Tags controller', function() {
 	});});
 
 
-	describe("getUserTags", () => it('should ask the tags repository for the users tags', function(done){
+	describe("getUserTags", function() { return it('should ask the tags repository for the users tags', function(done){
         const stubbedTags = [{name:"some tag", project_ids:["12354"]}];
         this.tagsRepository.getUserTags = sinon.stub().callsArgWith(1, null, stubbedTags);
         const req = { 
@@ -47,7 +54,7 @@ describe('Tags controller', function() {
         }
     }
         );
-    }));
+    }); });
 
 	describe("addProjectToTag", function() {
 		beforeEach(function() {
@@ -152,7 +159,7 @@ describe('Tags controller', function() {
 		});
 	});
 
-	describe("removeProjectFromAllTags", () => it('should tell the repository to remove that project from all the users tags', function(done){
+	describe("removeProjectFromAllTags", function() { return it('should tell the repository to remove that project from all the users tags', function(done){
         this.tagsRepository.removeProjectFromAllTags = sinon.stub().callsArgWith(2);
         const req = { 
             params: {
@@ -166,7 +173,7 @@ describe('Tags controller', function() {
         }
     }
         );
-    }));
+    }); });
 	
 	describe("deleteTag", function() {
 		beforeEach(function() {
