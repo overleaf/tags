@@ -1,60 +1,75 @@
-settings = require("settings-sharelatex")
-request = require("request").defaults({
+/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+const settings = require("settings-sharelatex");
+const request = require("request").defaults({
 	jar: false,
-	baseUrl: "http://localhost:#{settings.internal.tags.port}",
-})
+	baseUrl: `http://localhost:${settings.internal.tags.port}`,
+});
 
-module.exports =
-	getUserTags: (user_id, callback) ->
-		request.get {
-			url: "/user/#{user_id}/tag"
+module.exports = {
+	getUserTags(user_id, callback) {
+		return request.get({
+			url: `/user/${user_id}/tag`,
 			json: true
-		}, callback
+		}, callback);
+	},
 
-	createTag: (user_id, name, callback) ->
-		request.post {
-			url: "/user/#{user_id}/tag"
+	createTag(user_id, name, callback) {
+		return request.post({
+			url: `/user/${user_id}/tag`,
 			json: {name}
-		}, callback
+		}, callback);
+	},
 
-	updateTagUserIds: (old_user_id, new_user_id, callback) ->
-		request.put {
-			url: "/user/#{old_user_id}/tag"
+	updateTagUserIds(old_user_id, new_user_id, callback) {
+		return request.put({
+			url: `/user/${old_user_id}/tag`,
 			json: {user_id: new_user_id}
-		}, callback
+		}, callback);
+	},
 
-	renameTag: (user_id, tag_id, new_name, callback) ->
-		request.post {
-			url: "/user/#{user_id}/tag/#{tag_id}/rename"
+	renameTag(user_id, tag_id, new_name, callback) {
+		return request.post({
+			url: `/user/${user_id}/tag/${tag_id}/rename`,
 			json: {name: new_name}
-		}, callback
+		}, callback);
+	},
 
-	deleteTag: (user_id, tag_id, callback) ->
-		request.del {
-			url: "/user/#{user_id}/tag/#{tag_id}"
+	deleteTag(user_id, tag_id, callback) {
+		return request.del({
+			url: `/user/${user_id}/tag/${tag_id}`,
 			json: true
-		}, callback
+		}, callback);
+	},
 
-	addProjectToTag: (user_id, tag_id, project_id, callback) ->
-		request.post {
-			url: "/user/#{user_id}/tag/#{tag_id}/project/#{project_id}"
+	addProjectToTag(user_id, tag_id, project_id, callback) {
+		return request.post({
+			url: `/user/${user_id}/tag/${tag_id}/project/${project_id}`,
 			json: true
-		}, callback
+		}, callback);
+	},
 
-	addProjectToTagName: (user_id, name, project_id, callback) ->
-		request.post {
-			url: "/user/#{user_id}/tag/project/#{project_id}"
+	addProjectToTagName(user_id, name, project_id, callback) {
+		return request.post({
+			url: `/user/${user_id}/tag/project/${project_id}`,
 			json: {name}
-		}, callback
+		}, callback);
+	},
 
-	removeProjectFromTag: (user_id, tag_id, project_id, callback) ->
-		request.del {
-			url: "/user/#{user_id}/tag/#{tag_id}/project/#{project_id}"
+	removeProjectFromTag(user_id, tag_id, project_id, callback) {
+		return request.del({
+			url: `/user/${user_id}/tag/${tag_id}/project/${project_id}`,
 			json: true
-		}, callback
+		}, callback);
+	},
 
-	removeProjectFromAllTags: (user_id, project_id, callback) ->
-		request.del {
-			url: "/user/#{user_id}/project/#{project_id}"
+	removeProjectFromAllTags(user_id, project_id, callback) {
+		return request.del({
+			url: `/user/${user_id}/project/${project_id}`,
 			json: true
-		}, callback
+		}, callback);
+	}
+};
