@@ -1,3 +1,9 @@
+/* eslint-disable
+    handle-callback-err,
+    no-return-assign,
+*/
+// TODO: This file was created by bulk-decaffeinate.
+// Fix any style issues and re-enable lint.
 /*
  * decaffeinate suggestions:
  * DS102: Remove unnecessary code created because of implicit returns
@@ -14,7 +20,7 @@ const TagsApp = require('./helpers/TagsApp');
 const TagsClient = require('./helpers/TagsClient');
 
 describe('CRUDTests', function() {
-	before(done => db.tags.createIndex({
+	before(function(done) { return db.tags.createIndex({
             user_id: 1,
             name: 1
         }, {
@@ -24,9 +30,9 @@ describe('CRUDTests', function() {
                 name: 1
             },
             name: 'user_id_1_name_1'
-        }, done));
+        }, done); });
 
-	before(done => TagsApp.ensureRunning(done));
+	before(function(done) { return TagsApp.ensureRunning(done); });
 
 	beforeEach(function() {
 		this.user_id_1 = ObjectId();
