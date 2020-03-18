@@ -30,7 +30,7 @@ app.get('/user/:user_id/tag', controller.getUserTags)
 app.post('/user/:user_id/tag', controller.createTag)
 app.put('/user/:user_id/tag', controller.updateTagUserIds)
 app.post('/user/:user_id/tag/:tag_id/rename', controller.renameTag)
-app.del('/user/:user_id/tag/:tag_id', controller.deleteTag)
+app.delete('/user/:user_id/tag/:tag_id', controller.deleteTag)
 app.post(
   '/user/:user_id/tag/:tag_id/project/:project_id',
   controller.addProjectToTag
@@ -39,11 +39,11 @@ app.post(
   '/user/:user_id/tag/project/:project_id',
   controller.addProjectToTagName
 )
-app.del(
+app.delete(
   '/user/:user_id/tag/:tag_id/project/:project_id',
   controller.removeProjectFromTag
 )
-app.del(
+app.delete(
   '/user/:user_id/project/:project_id',
   controller.removeProjectFromAllTags
 )
@@ -54,14 +54,14 @@ app.get('/health_check', (req, res) =>
   HealthCheckController.check(function(err) {
     if (err != null) {
       logger.err({ err }, 'error performing health check')
-      return res.send(500)
+      return res.sendStatus(500)
     } else {
-      return res.send(200)
+      return res.sendStatus(200)
     }
   })
 )
 
-app.get('*', (req, res) => res.send(404))
+app.get('*', (req, res) => res.sendStatus(404))
 
 const host =
   __guard__(
