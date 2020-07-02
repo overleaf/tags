@@ -3,6 +3,8 @@ overleaf/tags
 
 An API for managing project tags/folders in Overleaf
 
+This repo is archived. Tags have been migrated to web: https://github.com/overleaf/web/tree/master/app/src/Features/Tags
+
 License
 -------
 
